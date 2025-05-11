@@ -1,0 +1,24 @@
+@import "ngx-toastr/toastr";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    font-family: "Raleway", sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-feature-settings: "lnum" 1;
+  }
+
+  @layer components {
+    .form-input {
+      @apply w-full bg-white outline-none border border-black text-black
+      px-3 py-[0.306rem] rounded-xl text-base placeholder:text-gray-500
+      placeholder:text-base focus:ring-1 focus:ring-black transition-shadow
+      duration-300 disabled:placeholder:opacity-40 placeholder:font-medium disabled:border-gray-600
+      disabled:text-gray-700;
+    }
+  }
+}
