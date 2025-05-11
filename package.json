@@ -2,7 +2,7 @@
   "name": "gestao-de-chamados",
   "version": "0.0.0",
   "scripts": {
-    "prepare": "husky install",
+    "prepare": "husky",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
