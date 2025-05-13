@@ -9,6 +9,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'paginas',
+    loadChildren: () =>
+      import('./modules/pages/pages.routes').then(
+        (route) => route.PAGES_ROUTES
+      ),
+  },
+  {
     path: '**',
     redirectTo: 'portal',
     pathMatch: 'full',

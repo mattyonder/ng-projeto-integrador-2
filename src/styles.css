@@ -1,4 +1,4 @@
-@import 'ngx-toastr/toastr';
+@import "ngx-toastr/toastr";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -14,11 +14,148 @@
 
   @layer components {
     .form-input {
-      @apply w-full bg-white outline-none border border-black text-black
+      @apply w-full bg-white outline-none border border-primary-2 text-black
       px-3 py-[0.306rem] rounded-xl text-base placeholder:text-gray-500
-      placeholder:text-base focus:ring-1 focus:ring-black transition-shadow
+      placeholder:text-base focus:ring-1 focus:ring-primary-1 transition-shadow
       duration-300 disabled:placeholder:opacity-40 placeholder:font-medium disabled:border-gray-600
       disabled:text-gray-700;
     }
   }
+}
+
+.text-link {
+  @apply text-base hover:text-accent;
+}
+
+/* Background Colors */
+.bg-primary-1 {
+  background-color: #1b8ef2;
+}
+.bg-primary-2 {
+  background-color: #1ba0f2;
+}
+.bg-primary-3 {
+  background-color: #38bdf2;
+}
+.bg-primary-4 {
+  background-color: #38d0f2;
+}
+.bg-accent {
+  background-color: #f2a516;
+}
+
+/* Text Colors */
+.text-primary-1 {
+  color: #1b8ef2;
+}
+.text-primary-2 {
+  color: #1ba0f2;
+}
+.text-primary-3 {
+  color: #38bdf2;
+}
+.text-primary-4 {
+  color: #38d0f2;
+}
+.text-accent {
+  color: #f2a516;
+}
+
+/* Border Colors */
+.border-primary-1 {
+  border: 1px solid #1b8ef2;
+}
+.border-primary-2 {
+  border: 1px solid #1ba0f2;
+}
+.border-primary-3 {
+  border: 1px solid #38bdf2;
+}
+.border-primary-4 {
+  border: 1px solid #38d0f2;
+}
+.border-accent {
+  border: 1px solid #f2a516;
+}
+
+/* Hover States */
+.hover\:bg-primary-1:hover {
+  background-color: #1b8ef2;
+}
+.hover\:bg-primary-2:hover {
+  background-color: #1ba0f2;
+}
+.hover\:bg-primary-3:hover {
+  background-color: #38bdf2;
+}
+.hover\:bg-primary-4:hover {
+  background-color: #38d0f2;
+}
+.hover\:bg-accent:hover {
+  background-color: #f2a516;
+}
+
+.hover\:text-primary-1:hover {
+  color: #1b8ef2;
+}
+.hover\:text-primary-2:hover {
+  color: #1ba0f2;
+}
+.hover\:text-primary-3:hover {
+  color: #38bdf2;
+}
+.hover\:text-primary-4:hover {
+  color: #38d0f2;
+}
+.hover\:text-accent:hover {
+  color: #f2a516;
+}
+
+.ring-primary-1 {
+  box-shadow: 0 0 0 3px rgba(27, 142, 242, 0.5);
+}
+.ring-primary-2 {
+  box-shadow: 0 0 0 3px rgba(27, 160, 242, 0.5);
+}
+.ring-primary-3 {
+  box-shadow: 0 0 0 3px rgba(56, 189, 242, 0.5);
+}
+.ring-primary-4 {
+  box-shadow: 0 0 0 3px rgba(56, 208, 242, 0.5);
+}
+.ring-accent {
+  box-shadow: 0 0 0 3px rgba(242, 165, 22, 0.5);
+}
+
+.focus\:ring-primary-1:focus {
+  box-shadow: 0 0 0 3px rgba(27, 142, 242, 0.5);
+}
+.focus\:ring-primary-2:focus {
+  box-shadow: 0 0 0 3px rgba(27, 160, 242, 0.5);
+}
+.focus\:ring-primary-3:focus {
+  box-shadow: 0 0 0 3px rgba(56, 189, 242, 0.5);
+}
+.focus\:ring-primary-4:focus {
+  box-shadow: 0 0 0 3px rgba(56, 208, 242, 0.5);
+}
+.focus\:ring-accent:focus {
+  box-shadow: 0 0 0 3px rgba(242, 165, 22, 0.5);
+}
+
+/* === BACKGROUND OPACITY (usando rgba direto) === */
+.bg-primary-1-opacity-50 {
+  background-color: rgba(27, 142, 242, 0.5);
+}
+.bg-primary-2-opacity-50 {
+  background-color: rgba(27, 160, 242, 0.5);
+}
+.bg-primary-3-opacity-50 {
+  background-color: rgba(56, 189, 242, 0.5);
+}
+.bg-primary-4-opacity-50 {
+  background-color: rgba(56, 208, 242, 0.5);
+}
+.bg-accent-opacity-50 {
+  background-color: rgba(242, 165, 22, 0.5);
 }

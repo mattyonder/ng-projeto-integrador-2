@@ -32,5 +32,6 @@ export class LoginComponent extends BaseComponent {
 
     console.log(form);
     this.messageService.success('SUCESSO MOCKADO !!');
+    this.router.navigate(['paginas']);
   }
 }

@@ -1,9 +1,14 @@
-<div class="flex w-full h-full bg-slate-100 p-3 rounded-lg">
+<div class="m-3">
+    <h1 class="text-center text-2xl font-medium text-primary-1">TS ServiceHub</h1>
+    <!-- <img src="../../../../../public/logo-mock.png" alt="Logo"> -->
+</div>
+
+<div class="flex w-full h-full bg-slate-100 p-3 rounded-lg border-primary-1 border-2 shadow-xl">
     <div class="flex flex-col">
         <span class="font-semibold text-center">
             Login
         </span>
-        <hr class="border-black">
+        <hr class="border-primary-4">
         <form [formGroup]="loginFg" (ngSubmit)="onSubmit()">
             <div class="flex  w-full flex-col p-2 gap-3 ">
                 <app-form-field label="Email"
@@ -16,7 +21,7 @@
                 </app-form-field>
                 <div class="flex w-full justify-center">
                     <button type="submit"
-                        class="justify-self-center rounded-xl w-min h-min px-4 py-2 bg-gray-500 text-white">
+                        class="justify-self-center rounded-xl w-min h-min px-4 py-2 bg-primary-3 text-white border-black border">
                         Logar
                     </button>
                 </div>
