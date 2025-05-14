@@ -11,7 +11,7 @@ import { BaseComponent } from '../../../../shared/utils/base.component';
   standalone: true,
   imports: [ReactiveFormsModule, FormFieldComponent, FormInputDirective],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
+  styles: '',
 })
 export class LoginComponent extends BaseComponent {
   loginFg = this.fb.group<FormGroupOf<ILoginForm>>({
@@ -21,6 +21,8 @@ export class LoginComponent extends BaseComponent {
     ]),
     usu_tx_senha: this.fb.control(null, Validators.required),
   });
+
+  
 
   onSubmit() {
     if (this.loginFg.invalid) {
