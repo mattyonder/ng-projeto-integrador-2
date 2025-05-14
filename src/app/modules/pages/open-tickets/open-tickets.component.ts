@@ -1,17 +1,17 @@
 import { KeyValuePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { ICategoryDto } from '../../../../shared/models/pages/category/category-dto';
 import { ActionComponent } from '../../../../shared/ui/action/action.component';
 import { FormInputDirective } from '../../../../shared/ui/directives/form-input.directive';
 import { SelectComponent } from '../../../../shared/ui/dropdown-select/dropdown-select.component';
 import { FormFieldComponent } from '../../../../shared/ui/form-field/form-field.component';
 import { PaginationComponent } from '../../../../shared/ui/pagination/pagination.component';
 import { BaseComponent } from '../../../../shared/utils/base.component';
-import { StatusEnum } from './../../../../shared/enums/status-enum';
+import { StatusEnum } from '../../../../shared/enums/status-enum';
+import { ICategoryDto } from '../../../../shared/models/pages/category/category-dto';
 
 @Component({
-  selector: 'app-my-tickets-client',
+  selector: 'app-open-tickets',
   standalone: true,
   imports: [
     PaginationComponent,
@@ -22,15 +22,14 @@ import { StatusEnum } from './../../../../shared/enums/status-enum';
     SelectComponent,
     KeyValuePipe,
   ],
-  templateUrl: './my-tickets-client.component.html',
+  templateUrl: './open-tickets.component.html',
   styles: '',
 })
-export class MyTicketsClientComponent extends BaseComponent {
+export class OpenTicketsComponent extends BaseComponent {
   categorias: ICategoryDto[] = [
     { catNrId: 1, catTxDescricao: 'Hardware' },
     { catNrId: 2, catTxDescricao: 'Software' },
     { catNrId: 3, catTxDescricao: 'Rede' },
   ];
-
   readonly StatusEnum = StatusEnum;
 }

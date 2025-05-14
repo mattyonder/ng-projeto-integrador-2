@@ -22,7 +22,8 @@
             <label class="block font-medium">Anexos (imagens)</label>
             <input #inputFileComponent type="file" accept="image/*" (change)="onFileSelected($event)" multiple
                 class="hidden" />
-            <button type="button" class="bg-primary-2 hover:bg-primary-3 text-white px-4 py-2 rounded-lg border-black border-2"
+            <button type="button"
+                class="bg-primary-2 hover:bg-primary-3 text-white px-4 py-2 rounded-lg border-black border-2"
                 (click)="inputFileComponent.click()">
                 Selecionar Imagens </button>
         </div>
@@ -39,9 +40,10 @@
         </div>
 
         <div class="flex gap-3">
-            <button type="button" class="button-default bg-white text-black" (click)="clearFields()">Limpar </button>
+            <button type="button" class="button-default bg-white text-black hover:bg-slate-50"
+                (click)="clearFields()">Limpar </button>
 
-            <button type="submit" class="button-default bg-primary-3 text-white">Enviar</button>
+            <button type="submit" class="button-default bg-primary-3 text-white hover:bg-primary-2 ">Enviar</button>
         </div>
 
     </form>

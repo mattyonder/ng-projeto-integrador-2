@@ -13,9 +13,7 @@
                 valueKey="catNrId" placeholder="Selecione uma categoria">
             </app-dropdown-select>
 
-            <app-dropdown-select [label]="'Status'" [options]="StatusEnum | keyvalue" labelKey="value" valueKey="key"
-                placeholder="Selecione uma categoria">
-            </app-dropdown-select>
+
         </div>
 
 
@@ -46,10 +44,6 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
                             Categoria</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
-                            Status</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
-                            Técnico responsável</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
                             Ações</th>
 
                     </tr>
@@ -58,47 +52,25 @@
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Computador lento</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Software</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <div
-                                class=" bg-blue-500 rounded-2xl border-2 border-black text-white text-center w-min px-3 py-2">
-                                Em Andamento
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Mateus Santos</td>
 
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><app-action icon="file-lines"
-                                title="Interagir" classIcon="text-lg text-blue-600" />
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><app-action icon="user-tag"
+                                title="Atribuir a mim" classIcon="text-lg text-blue-600" />
                         </td>
                     </tr>
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Computador lento</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Software</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <div
-                                class=" bg-blue-500 rounded-2xl border-2 border-black text-white text-center w-min px-3 py-2">
-                                Em Andamento
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Marcos Vinicius</td>
 
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <app-action icon="file-lines" title="Visualizar" classIcon="text-lg text-blue-600" />
-                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><app-action icon="user-tag"
+                                title="Atribuir a mim" classIcon="text-lg text-blue-600" /> </td>
                     </tr>
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Computador lento
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Software</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <div
-                                class=" bg-yellow-500 rounded-2xl border-2 border-black text-black text-center w-min px-3 py-2">
-                                Em Aberto
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Não atribuido</td>
 
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><app-action icon="file-lines"
-                                title="Interagir" classIcon="text-lg text-blue-600" />
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><app-action icon="user-tag"
+                                title="Atribuir a mim" classIcon="text-lg text-blue-600" />
                         </td>
                     </tr>
                 </tbody>
