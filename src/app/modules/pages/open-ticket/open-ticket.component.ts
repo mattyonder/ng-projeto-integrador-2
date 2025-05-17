@@ -32,12 +32,12 @@ export class OpenTicketComponent extends BaseComponent {
     read: ElementRef,
   });
 
-  lticketFg = this.fb.group<FormGroupOf<ITicketForm>>({
+  ticketFg = this.fb.group<FormGroupOf<ITicketForm>>({
     chaTxTitulo: this.fb.control(null, Validators.required),
     chaTxDescricao: this.fb.control(null, Validators.required),
     chaTxStatus: this.fb.control('ABERTO', Validators.required),
     chaNrIdCliente: this.fb.control(1, Validators.required),
-    chaNrIdTecnico: this.fb.control(1),
+    chaNrIdTecnico: this.fb.control(null),
     catNrId: this.fb.control(null, Validators.required),
   });
 
@@ -50,19 +50,18 @@ export class OpenTicketComponent extends BaseComponent {
   StatusEnum = StatusEnum;
 
   clearFields() {
-    this.lticketFg.reset();
+    this.ticketFg.reset();
   }
 
   onSubmit() {
-    const ticketForm = this.lticketFg.getRawValue() as ITicketForm;
+    const ticketForm = this.ticketFg.getRawValue() as ITicketForm;
     console.log(ticketForm);
-    if (this.lticketFg.invalid) return;
+    if (this.ticketFg.invalid) return this.ticketFg.markAllAsTouched();
 
     this.#ticketService.create(ticketForm).subscribe({
       next: (res) => {
         this.messageService.success('Chamado criado com sucesso');
         this.clearFields();
-        // Aqui você pode exibir um snackbar ou redirecionar
       },
       error: (err) => {
         this.messageService.error('erri ao criar um chamado');

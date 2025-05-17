@@ -69,6 +69,8 @@ export class SelectComponent implements ControlValueAccessor, OnInit {
   @Input() options: any[] = [];
   @Input() labelKey: string = 'label';
   @Input() valueKey: string = 'value';
+  @Input() error: string | null = null;
+
 
   @Output() selectedObject = new EventEmitter<any>();
   ngControl = contentChild(FormInputDirective, { read: NgControl });

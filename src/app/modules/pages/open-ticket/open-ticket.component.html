@@ -5,17 +5,19 @@
 
     <h2 class="font-semibold text-xl">Preencha os dados no formulário para enviar um novo chamado</h2>
 
-    <form [formGroup]="lticketFg" (ngSubmit)="onSubmit()" class="flex flex-col space-y-4">
-        <app-form-field label="Título">
+    <form [formGroup]="ticketFg" (ngSubmit)="onSubmit()" class="flex flex-col space-y-4">
+        <app-form-field label="Título" [error]="this.errorHandler.showErrorMessageInField(ticketFg, 'chaTxTitulo')">
             <input appFormInput formControlName="chaTxTitulo" type="text" placeholder="Digite o título do chamado" />
         </app-form-field>
 
-        <app-form-field label="Descrição">
+        <app-form-field label="Descrição"
+            [error]="this.errorHandler.showErrorMessageInField(ticketFg, 'chaTxDescricao')">
             <textarea appFormInput formControlName="chaTxDescricao" placeholder="Digite a descrição"></textarea>
         </app-form-field>
 
-        <app-dropdown-select formControlName="catNrId" [label]="'Categoria'" [options]="categorias"
-            labelKey="catTxDescricao" valueKey="catNrId" placeholder="Selecione uma categoria">
+        <app-dropdown-select [error]="this.errorHandler.showErrorMessageInField(ticketFg, 'chaTxDescricao')"
+            formControlName="catNrId" [label]="'Categoria'" [options]="categorias" labelKey="catTxDescricao"
+            valueKey="catNrId" placeholder="Selecione uma categoria">
         </app-dropdown-select>
 
         <div class="flex gap-3">
