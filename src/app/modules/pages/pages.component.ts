@@ -8,14 +8,14 @@ import { BaseComponent } from '../../../shared/utils/base.component';
   standalone: true,
   imports: [RouterOutlet, RouterModule, FontAwesomeModule],
   template: `
-    <main class="flex">
+    <main class="flex bg-gray-200">
       <!-- ASIDE FIXO -->
       <aside
         class="fixed top-0 left-0 h-screen w-1/6 bg-primary-2 border-primary-1 rounded-r-xl shadow-xl py-3 px-3 text-white font-fixed z-50 text-wrap break-words"
       >
         <span class="text-xl block mb-6">TS ServiceHub</span>
 
-        <div class="flex flex-col underline px-5 gap-4">
+        <div class="flex flex-col px-5 gap-4">
           <a class="text-link" routerLink="home">Home</a>
           <a class="text-link" routerLink="abrir-chamado">Abrir Chamado</a>
           <a class="text-link" routerLink="meus-chamados-cliente"
@@ -26,7 +26,7 @@ import { BaseComponent } from '../../../shared/utils/base.component';
 
           <a class="text-link">Chamados em Aberto</a>
           <a class="text-link">Equipes</a>
-          <a class="text-link">Dashboards</a>
+          <a class="text-link" routerLink="dashboards">Dashboards</a>
           <a class="text-link">Categorias de Chamados</a>
           <a class="text-link">Instituição</a>
           <a class="text-link">Configurações</a>
