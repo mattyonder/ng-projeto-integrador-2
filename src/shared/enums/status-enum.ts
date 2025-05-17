@@ -1,10 +1,12 @@
-export enum StatusEnum {
-  ABERTO = 'Em aberto',
-  ANDAMENTO = 'Em andamento',
-  CONCLUIDO = 'Concluído',
+export enum StatusTechnicianEnum {
+  EM_ANDAMENTO = 'Em Andamento',
+  RESOLVIDO = 'Resolvido',
+  FECHADO = 'Fechado',
 }
 
-export enum StatusTechnicianEnum {
-  ANDAMENTO = 'Em andamento',
-  CONCLUIDO = 'Concluído',
+export enum StatusEnum {
+  ABERTO = 'Aberto',
+  EM_ANDAMENTO = 'Em Andamento',
+  RESOLVIDO = 'Resolvido',
+  FECHADO = 'Fechado',
 }

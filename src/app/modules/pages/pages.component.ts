@@ -29,9 +29,10 @@ import { BaseComponent } from '../../../shared/utils/base.component';
           <a class="text-link" routerLink="chamados-abertos"
             >Chamados em Aberto</a
           >
-          <a class="text-link">Equipes</a>
           <a class="text-link">Dashboards</a>
-          <a class="text-link">Categorias de Chamados</a>
+          <a class="text-link" routerLink="categorias"
+            >Categorias de Chamados</a
+          >
           <a class="text-link">Instituição</a>
           <a class="text-link">Configurações</a>
         </div>

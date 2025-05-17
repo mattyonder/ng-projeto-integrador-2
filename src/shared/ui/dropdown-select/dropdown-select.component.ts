@@ -1,17 +1,38 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, forwardRef } from '@angular/core';
+import {
+  Component,
+  contentChild,
+  effect,
+  EventEmitter,
+  forwardRef,
+  inject,
+  Injector,
+  Input,
+  model,
+  OnInit,
+  Output,
+  untracked,
+} from '@angular/core';
 import {
   ControlValueAccessor,
+  FormGroupDirective,
   FormsModule,
   NG_VALUE_ACCESSOR,
+  NgControl,
+  Validators,
 } from '@angular/forms';
+import { FormInputDirective } from '../directives/form-input.directive';
 
 @Component({
   selector: 'app-dropdown-select',
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <label *ngIf="label" class="block mb-1 font-medium">{{ label }}</label>
+    <label *ngIf="label" class="block mb-1 font-medium"
+      >{{ label }}
+      <span class="text-red-500 ml-1">*</span>
+    </label>
+    @if (isRequired()) { }
     <select
       class="w-full bg-white outline-none border border-primary-2 text-black
       px-3 py-[0.306rem] rounded-xl text-base placeholder:text-gray-500
@@ -19,14 +40,14 @@ import {
       duration-300 disabled:placeholder:opacity-40 placeholder:font-medium disabled:border-gray-600
       disabled:text-gray-700"
       [disabled]="disabled"
-      [(ngModel)]="value"
-      (ngModelChange)="onChange($event)"
+      [(ngModel)]="selected"
+      (ngModelChange)="handleChange($event)"
     >
-      <option *ngIf="placeholder" [value]="null" disabled selected>
+      <option *ngIf="placeholder" [ngValue]="null" disabled>
         {{ placeholder }}
       </option>
 
-      <option *ngFor="let opt of options" [value]="opt[valueKey]">
+      <option *ngFor="let opt of options" [ngValue]="opt[valueKey]">
         {{ opt[labelKey] }}
       </option>
     </select>
@@ -39,30 +60,66 @@ import {
     },
   ],
 })
-export class SelectComponent implements ControlValueAccessor {
+export class SelectComponent implements ControlValueAccessor, OnInit {
+  injector = inject(Injector);
+  fgd = inject(FormGroupDirective, { optional: true });
+
   @Input() label: string = '';
   @Input() placeholder: string = 'Selecione';
   @Input() options: any[] = [];
-
   @Input() labelKey: string = 'label';
   @Input() valueKey: string = 'value';
 
-  value: string | number | null = null;
+  @Output() selectedObject = new EventEmitter<any>();
+  ngControl = contentChild(FormInputDirective, { read: NgControl });
+
+  selected: any = null;
   disabled = false;
 
-  onChange = (_: any) => {};
-  onTouched = () => {};
+  private onChange = (_: any) => {};
+  private onTouched = () => {};
 
-  writeValue(val: any): void {
-    this.value = val;
+  isRequired = model<boolean>(false);
+
+  writeValue(value: any): void {
+    this.selected = value;
   }
+
   registerOnChange(fn: any): void {
     this.onChange = fn;
   }
+
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
+  }
+
+  handleChange(value: any) {
+    this.selected = value;
+    this.onChange(value);
+
+    const fullObj = this.options.find((opt) => opt[this.valueKey] === value);
+    this.selectedObject.emit(fullObj);
+  }
+
+  ngOnInit(): void {
+    effect(
+      () => {
+        untracked(() => {
+          if (this.ngControl()) {
+            const controlName = this.ngControl()?.name as string;
+            const formControl = this.fgd?.form.get(controlName);
+            if (controlName && formControl) {
+              const isRequired = formControl.hasValidator(Validators.required);
+              this.isRequired.set(isRequired);
+            }
+          }
+        });
+      },
+      { injector: this.injector }
+    );
   }
 }

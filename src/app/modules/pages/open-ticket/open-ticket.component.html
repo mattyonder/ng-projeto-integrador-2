@@ -6,7 +6,7 @@
     <h2 class="font-semibold text-xl">Preencha os dados no formulário para enviar um novo chamado</h2>
 
     <form [formGroup]="lticketFg" (ngSubmit)="onSubmit()" class="flex flex-col space-y-4">
-        <app-form-field label="Titulo">
+        <app-form-field label="Título">
             <input appFormInput formControlName="chaTxTitulo" type="text" placeholder="Digite o título do chamado" />
         </app-form-field>
 
@@ -18,35 +18,12 @@
             labelKey="catTxDescricao" valueKey="catNrId" placeholder="Selecione uma categoria">
         </app-dropdown-select>
 
-        <div>
-            <label class="block font-medium">Anexos (imagens)</label>
-            <input #inputFileComponent type="file" accept="image/*" (change)="onFileSelected($event)" multiple
-                class="hidden" />
-            <button type="button"
-                class="bg-primary-2 hover:bg-primary-3 text-white px-4 py-2 rounded-lg border-black border-2"
-                (click)="inputFileComponent.click()">
-                Selecionar Imagens </button>
-        </div>
-
-        <div class="flex gap-4 mt-2 flex-wrap">
-            <div *ngFor="let img of lticketFg.value.aneTxAnexo; let i = index"
-                class="relative w-24 h-24 border rounded overflow-hidden">
-                <img [src]="img" class="object-cover w-full h-full" />
-                <button type="button" (click)="removeAnexo(i)"
-                    class="absolute top-0 right-0 bg-red-600 text-white text-xs px-1 rounded-bl" title="Remover">
-                    ✕
-                </button>
-            </div>
-        </div>
-
         <div class="flex gap-3">
-            <button type="button" class="button-default bg-white text-black hover:bg-slate-50"
-                (click)="clearFields()">Limpar </button>
+            <button type="button" class="button-default bg-white text-black hover:bg-slate-50" (click)="clearFields()">
+                Limpar
+            </button>
 
-            <button type="submit" class="button-default bg-primary-3 text-white hover:bg-primary-2 ">Enviar</button>
+            <button type="submit" class="button-default bg-primary-3 text-white hover:bg-primary-2">Enviar</button>
         </div>
-
     </form>
-
-
 </section>
