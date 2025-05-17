@@ -1,0 +1,64 @@
+<section class="flex flex-col px-5 py-7 gap-3 overflow-y-auto">
+    <div class="flex p-1 justify-between items-center">
+        <h1 class="font-bold text-3xl">Categorias</h1>
+        <button type="button" (click)="openModal()"
+            class="flex button-default bg-primary-3 text-white hover:bg-primary-2 gap-3">
+            Nova categoria
+            <fa-icon icon="plus" />
+        </button>
+    </div>
+
+    <div class="bg-white border-accent rounded-lg shadow-md px-4 py-3 mt-4">
+        <div class="flex justify-between">
+            <span class="font-semibold">Categorias cadastradas:</span>
+            <app-pagination [totalPages]="0" />
+        </div>
+
+        <div class="overflow-x-auto mt-2">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-accent">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">Nome
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
+                            Descrição</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">Ações
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @for (categoria of categorias; track categoria.id) {
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 text-sm text-gray-900">{{ categoria.id }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-900">{{ categoria.nome }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-900">{{ categoria.descricao }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-900 flex gap-3">
+                            <app-action icon="pencil" title="Editar" classIcon="text-lg text-blue-600"
+                                (click)="editCategories(categoria.id)" />
+                            <app-action icon="trash" title="Excluir" classIcon="text-lg text-red-600"
+                                (click)="deleteCategories(categoria.id)" />
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</section>
+
+@if(this.modalIsOpen()){
+<app-modal enableClose [(open)]="modalIsOpen">
+    <div class="bg-white border-2 border-black rounded-md p-3 w-[35rem]">
+        <div class="flex justify-between items-center">
+            <h1 class="text-2xl font-semibold">Criar nova categoria</h1>
+            <button type="button" (click)="closeModal()"
+                class="flex button-default  text-black  gap-3 hover:bg-slate-50">
+                X
+            </button>
+        </div>
+        <app-ticket-categories-form />
+    </div>
+</app-modal>
+}

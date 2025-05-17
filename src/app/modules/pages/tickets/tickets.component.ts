@@ -1,12 +1,35 @@
 import { Component } from '@angular/core';
+import { StatusEnum } from '../../../../shared/enums/status-enum';
+import { ICategoryDto } from '../../../../shared/models/pages/category/category-dto';
+import { ActionComponent } from '../../../../shared/ui/action/action.component';
+import { SelectComponent } from '../../../../shared/ui/dropdown-select/dropdown-select.component';
+import { FormFieldComponent } from '../../../../shared/ui/form-field/form-field.component';
+import { PaginationComponent } from '../../../../shared/ui/pagination/pagination.component';
+import { BaseComponent } from '../../../../shared/utils/base.component';
+import { KeyValuePipe } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FormInputDirective } from '../../../../shared/ui/directives/form-input.directive';
 
 @Component({
   selector: 'app-tickets',
   standalone: true,
-  imports: [],
+  imports: [
+    PaginationComponent,
+    FontAwesomeModule,
+    ActionComponent,
+    FormFieldComponent,
+    FormInputDirective,
+    SelectComponent,
+    KeyValuePipe,
+  ],
   templateUrl: './tickets.component.html',
-  styleUrl: './tickets.component.css'
+  styles: '',
 })
-export class TicketsComponent {
-
+export class TicketsComponent extends BaseComponent {
+  categorias: ICategoryDto[] = [
+    { catNrId: 1, catTxDescricao: 'Hardware' },
+    { catNrId: 2, catTxDescricao: 'Software' },
+    { catNrId: 3, catTxDescricao: 'Rede' },
+  ];
+  readonly StatusEnum = StatusEnum;
 }

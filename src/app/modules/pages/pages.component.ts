@@ -21,13 +21,18 @@ import { BaseComponent } from '../../../shared/utils/base.component';
           <a class="text-link" routerLink="meus-chamados-cliente"
             >Meu Chamados (cliente)</a
           >
-          <a class="text-link">Meu Chamados (tecnico)</a>
-          <a class="text-link">Chamados (Admin)</a>
-
-          <a class="text-link">Chamados em Aberto</a>
+          <a class="text-link" routerLink="meus-chamados-tecnico"
+            >Meu Chamados (tecnico)</a
+          >
+          <a class="text-link" routerLink="chamados">Chamados (Admin)</a>
           <a class="text-link">Equipes</a>
           <a class="text-link" routerLink="dashboards">Dashboards</a>
-          <a class="text-link">Categorias de Chamados</a>
+          <a class="text-link" routerLink="chamados-abertos"
+            >Chamados em Aberto</a
+          >
+          <a class="text-link" routerLink="categorias"
+            >Categorias de Chamados</a
+          >
           <a class="text-link">Instituição</a>
           <a class="text-link">Configurações</a>
         </div>

@@ -1,3 +1,4 @@
+import { ChamadoSemanal, RelatorioChamadosPorTecnicoDto, StatusChamado } from './../../../../shared/core/services/dashboard/dashboard.service';
 import { ChartComponent, NgApexchartsModule } from 'ng-apexcharts';
 import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 
@@ -38,7 +39,7 @@ import {
   ApexYAxis,
   ApexFill
 } from "ng-apexcharts";
-import { DashboardService, RelatorioChamadosPorCategoriaDto, RelatorioChamadosPorDataDto } from '../../../../shared/core/services/dashboard/dashboard.service';
+import { DashboardService, RelatorioChamadosPorCategoriaDto, RelatorioChamadosPorDataDto, RelatorioStatusDto } from '../../../../shared/core/services/dashboard/dashboard.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 export type ChartOptionsBar = {
@@ -74,24 +75,81 @@ export class DashboardsComponent implements OnInit {
   //DTOS
   relatorioChamadosPorCategoriaDto = signal<RelatorioChamadosPorCategoriaDto[] | null>(null);
   relatorioChamadosPorDataDto = signal<RelatorioChamadosPorDataDto | null>(null)
+  relatorioStatusDto = signal<RelatorioStatusDto[] | null>(null)
+  relatorioChamadosPorTecnicoDto = signal<RelatorioChamadosPorTecnicoDto[] | null>(null)
+  relatorioChamadoSemanal = signal<ChamadoSemanal[] | null>(null);
+
+  //ENUMS
+  statusChamado = StatusChamado
 
   ngOnInit(): void {
-    this.getChartLine();
-    this.getChartBar();
-    this.getPorCategoria();
-    this.getPorDia();
+
+    const hoje = new Date();
+    const dataFormatada = hoje.toISOString().split('T')[0];
+
+    // this.getChartLine();
+    this.getPorCategoria(dataFormatada);
+    this.getPorDia(dataFormatada);
+    this.getPorStatus(dataFormatada);
+    this.getPorTecnico(dataFormatada);
+    this.getChamadosSemanal();
   }
 
-  getPorDia() {
-    this.#dashboardService.getPorDia().subscribe({
+  onDateChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const dataSelecionada = input.value; // formato: 'YYYY-MM-DD'
+
+    console.log(dataSelecionada);
+
+    if (dataSelecionada) {
+      this.getPorTecnico(dataSelecionada);
+      this.getPorStatus(dataSelecionada);
+      this.getPorDia(dataSelecionada);
+      this.getPorCategoria(dataSelecionada);
+    }
+  }
+
+  getChamadosSemanal() {
+    this.#dashboardService.getChamadosSemanais().subscribe({
+      next: (dados) => {
+        const ordenado = dados.sort((a, b) => a.diaSemanaNumero - b.diaSemanaNumero);
+
+        // Extrai os nomes dos dias e as quantidades
+        const categories = ordenado.map(item => item.diaSemanaNome);
+        const seriesData = ordenado.map(item => item.total);
+
+        this.getChartBar(seriesData, categories);
+      },
+      error: (erro) => console.error('Erro ao buscar chamados semanais', erro)
+    });
+  }
+
+  getPorTecnico(dataSelecionada?: string) {
+    this.#dashboardService.getPorTecnico(dataSelecionada).subscribe({
+      next: (res) => {
+        this.relatorioChamadosPorTecnicoDto.set(res);
+      }
+    })
+  }
+
+  getPorStatus(dataSelecionada?: string) {
+    this.#dashboardService.getPorStatus(dataSelecionada).subscribe({
+      next: (res) => {
+        this.relatorioStatusDto.set(res);
+      }
+    })
+  }
+
+  getPorDia(dataSelecionada?: string) {
+    this.#dashboardService.getPorDia(dataSelecionada).subscribe({
       next: (res) => {
         this.relatorioChamadosPorDataDto.set(res);
       }
     })
   }
 
-  getPorCategoria() {
-    this.#dashboardService.getPorCategoria().subscribe({
+  getPorCategoria(dataSelecionada?: string) {
+    this.#dashboardService.getPorCategoria(dataSelecionada).subscribe({
       next: (res) => {
         const series = res.map(item => item.totalChamados);
         const labels = res.map(item => item.categoria);
@@ -101,12 +159,12 @@ export class DashboardsComponent implements OnInit {
     })
   }
 
-  getChartBar() {
+  getChartBar(series: number[], label: string[]) {
     this.chartOptionsBar = {
       series: [
         {
           name: "Inflation",
-          data: [230, 310, 400, 1010, 400, 360, 320, 230, 140, 800, 500, 200]
+          data: series
         }
       ],
       chart: {
@@ -130,20 +188,7 @@ export class DashboardsComponent implements OnInit {
       },
 
       xaxis: {
-        categories: [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep",
-          "Oct",
-          "Nov",
-          "Dec"
-        ],
+        categories: label,
         position: "bottom",
         labels: {
           offsetY: -5
@@ -184,7 +229,7 @@ export class DashboardsComponent implements OnInit {
         },
         labels: {
           show: false,
-          
+
         }
       }
     };

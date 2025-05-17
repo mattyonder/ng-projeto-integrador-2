@@ -3,69 +3,85 @@
         <h2 class="text-4xl font-bold">Dashboard</h2>
 
         <div class="flex gap-2">
-            <input class="bg-primary-1 rounded-lg text-white p-2" type="date">
+            <input (change)="onDateChange($event)" class="bg-primary-1 rounded-lg text-white p-2" type="date">
         </div>
     </div>
 
     <div class="flex gap-3 h-[85%]">
         <div class="flex flex-col gap-3 w-[30%]">
-            <div class="bg-white flex flex-col justify-around rounded-lg h-[50%] p-3">
+            <div class="bg-white rounded-lg h-[50%] p-3">
                 <div>
                     <h2>Total de chamados por status</h2>
                 </div>
 
-                <div class="flex gap-2">
-                    <span class="p-5 flex justify-center items-center h-6 w-6 rounded-full bg-green-500">
-                        <fa-icon icon="check"></fa-icon>
-                    </span>
-                    <div>
-                        <p class="font-semibold">3.000</p>
-                        <p class="text-xs text-gray-600">Chamados atendidos</p>
+                <div class="flex flex-col h-full justify-around">
+                    @for (item of relatorioStatusDto(); track $index) {
+                    @switch (item.status) {
+                    @case ('ABERTO') {
+                    <div class="flex gap-2">
+                        <span class="p-5 flex justify-center items-center h-6 w-6 rounded-full bg-primary-2">
+                            <fa-icon class="text-white" icon="thumbs-up"></fa-icon>
+                        </span>
+                        <div>
+                            <p class="font-semibold">{{ item.total }}</p>
+                            <p class="text-xs text-gray-600">Chamados abertos</p>
+                        </div>
                     </div>
-                </div>
-                <div class="flex gap-2">
-                    <span class="p-5 flex justify-center items-center h-6 w-6 rounded-full bg-green-500">❌</span>
-                    <div>
-                        <p class="font-semibold">200</p>
-                        <p class="text-xs text-gray-600">Chamados nao atendidos</p>
+                    }
+                    @case ('EM_ANDAMENTO') {
+                    <div class="flex gap-2">
+                        <span class="p-5 flex justify-center items-center h-6 w-6 rounded-full bg-accent">
+                            <fa-icon class="text-white" icon="spinner"></fa-icon>
+                        </span>
+                        <div>
+                            <p class="font-semibold">{{ item.total }}</p>
+                            <p class="text-xs text-gray-600">Chamados em andamento</p>
+                        </div>
                     </div>
-                </div>
-                <div class="flex gap-2">
-                    <span class="p-5 flex justify-center items-center h-6 w-6 rounded-full bg-green-500">⭐</span>
-                    <div>
-                        <p class="font-semibold">1.000</p>
-                        <p class="text-xs text-gray-600">Chamados abertos</p>
+                    }
+                    @case ('RESOLVIDO') {
+                    <div class="flex gap-2">
+                        <span class="p-5 flex justify-center items-center h-6 w-6 rounded-full bg-green-500">
+                            <fa-icon class="text-white" icon="check"></fa-icon>
+                        </span>
+                        <div>
+                            <p class="font-semibold">{{ item.total }}</p>
+                            <p class="text-xs text-gray-600">Chamados resolvidos</p>
+                        </div>
                     </div>
+                    }
+                    @case ('FECHADO') {
+                    <div class="flex gap-2">
+                        <span class="p-5 flex justify-center items-center h-6 w-6 rounded-full bg-red-600">
+                            <fa-icon class="text-white" icon="door-closed"></fa-icon>
+                        </span>
+                        <div>
+                            <p class="font-semibold">{{ item.total }}</p>
+                            <p class="text-xs text-gray-600">Chamados Fechado</p>
+                        </div>
+                    </div>
+                    }
+                    }
+                    }
                 </div>
             </div>
 
-            <div class="bg-white flex flex-col justify-around rounded-lg h-[50%] p-3">
+            <div class="bg-white flex flex-col gap-2 rounded-lg h-[50%] p-3">
                 <div>
                     <h2>Tecnicos com mais chamados no dia</h2>
                 </div>
 
-                <div class="flex gap-2">
-                    <span class="p-5 flex justify-center items-center h-6 w-6 rounded-full bg-green-500">😎</span>
-                    <div>
-                        <p class="font-semibold">Jose santos santanta</p>
-                        <p class="text-xs text-gray-600">3.000</p>
+                @for (item of relatorioChamadosPorTecnicoDto(); track $index) {
+                    <div class="flex gap-2">
+                        <span class="p-5 flex justify-center items-center h-6 w-6 rounded-full bg-slate-500">
+                            <fa-icon class="text-white" icon="user"></fa-icon>
+                        </span>
+                        <div>
+                            <p class="font-semibold">{{ item.tecnico }}</p>
+                            <p class="text-xs text-gray-600">Total de chamados: {{ item.totalChamados }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="flex gap-2">
-                    <span
-                        class="p-5 flex justify-center items-center h-6 w-6 rounded-full bg-green-500 fa-check">😎</span>
-                    <div>
-                        <p class="font-semibold">Leonardo santos</p>
-                        <p class="text-xs text-gray-600">200</p>
-                    </div>
-                </div>
-                <div class="flex gap-2">
-                    <span class="p-5 flex justify-center items-center h-6 w-6 rounded-full bg-green-500">😎</span>
-                    <div>
-                        <p class="font-semibold">Savio martins</p>
-                        <p class="text-xs text-gray-600">1.000</p>
-                    </div>
-                </div>
+                }
             </div>
         </div>
 
@@ -93,12 +109,12 @@
         <div class="w-[40%] h-full"> <!-- altura real -->
             <div class="bg-white h-full rounded-lg p-4">
                 <div class="flex justify-center">
-                    <h2>Total de chamados por mês</h2>
+                    <h2>Total de chamados por semana</h2>
                 </div>
-                <apx-chart style="height: 100%; display: block;" [series]="chartOptionsBar!.series!" [chart]="chartOptionsBar!.chart!"
-                    [dataLabels]="chartOptionsBar!.dataLabels!" [plotOptions]="chartOptionsBar!.plotOptions!"
-                    [yaxis]="chartOptionsBar!.yaxis!" [xaxis]="chartOptionsBar!.xaxis!" [fill]="chartOptionsBar!.fill!"
-                    [title]="chartOptionsBar!.title!">
+                <apx-chart style="height: 100%; display: block;" [series]="chartOptionsBar!.series!"
+                    [chart]="chartOptionsBar!.chart!" [dataLabels]="chartOptionsBar!.dataLabels!"
+                    [plotOptions]="chartOptionsBar!.plotOptions!" [yaxis]="chartOptionsBar!.yaxis!"
+                    [xaxis]="chartOptionsBar!.xaxis!" [fill]="chartOptionsBar!.fill!" [title]="chartOptionsBar!.title!">
                 </apx-chart>
             </div>
         </div>

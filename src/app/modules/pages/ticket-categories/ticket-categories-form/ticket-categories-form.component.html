@@ -1,0 +1,18 @@
+<form (ngSubmit)="onSubmit()" class="flex flex-col space-y-4">
+    <app-form-field label="Nome da categoria">
+        <input appFormInput placeholder="Digite o nome" formControlName="eqiTxNome" name="eqiTxNome" />
+    </app-form-field>
+
+    <app-form-field label="Descrição da categoria">
+        <input appFormInput placeholder="Digite o descrição" formControlName="eqiTxNome" name="eqiTxNome" />
+    </app-form-field>
+    <!-- <app-dropdown-select [label]="'Profissionais'" [options]="profissionais" labelKey="nome" valueKey="id"
+        placeholder="Selecione profissionais" formControlName="usuNrIds" name="profissionais"
+        (selectedObject)="addProfissional($event)"></app-dropdown-select> -->
+
+
+
+    <button type="submit" class="button-default bg-primary-3 text-white hover:bg-primary-2">
+        Cadastrar
+    </button>
+</form>

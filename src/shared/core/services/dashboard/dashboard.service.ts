@@ -29,6 +29,20 @@ export interface RelatorioChamadosPorCategoriaDto {
   totalChamados: number;
 }
 
+export enum StatusChamado {
+  ABERTO = 'Aberto',
+  EM_ANDAMENTO = 'Em Andamento',
+  RESOLVIDO = 'Resolvido',
+  FECHADO = 'Fechado'
+}
+
+export interface ChamadoSemanal {
+  semanaInicio: string;
+  diaSemanaNumero: number;
+  diaSemanaNome: string;
+  total: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -37,23 +51,23 @@ export class DashboardService {
 
   constructor(private http: HttpClient) {}
 
-  getPorStatus(): Observable<RelatorioStatusDto[]> {
-    return this.http.get<RelatorioStatusDto[]>(`${this.apiUrl}/status`);
+  getPorStatus(chaDtDataCriacao?: string): Observable<RelatorioStatusDto[]> {
+    return this.http.get<RelatorioStatusDto[]>(`${this.apiUrl}/status?chaDtDataCriacao=${chaDtDataCriacao}`);
   }
 
-  getPorTecnico(): Observable<RelatorioChamadosPorTecnicoDto[]> {
-    return this.http.get<RelatorioChamadosPorTecnicoDto[]>(`${this.apiUrl}/por-tecnico`);
+  getPorTecnico(chaDtDataCriacao?: string): Observable<RelatorioChamadosPorTecnicoDto[]> {
+    return this.http.get<RelatorioChamadosPorTecnicoDto[]>(`${this.apiUrl}/por-tecnico?chaDtDataCriacao=${chaDtDataCriacao}`);
   }
 
-  getTempoMedio(): Observable<RelatorioTempoMedioResolucaoDto[]> {
-    return this.http.get<RelatorioTempoMedioResolucaoDto[]>(`${this.apiUrl}/tempo-medio`);
+  getChamadosSemanais(): Observable<ChamadoSemanal[]> {
+    return this.http.get<ChamadoSemanal[]>(`${this.apiUrl}/semanais?`);
   }
 
-  getPorDia(): Observable<RelatorioChamadosPorDataDto> {
-    return this.http.get<RelatorioChamadosPorDataDto>(`${this.apiUrl}/por-dia`);
+  getPorDia(chaDtDataCriacao?: string): Observable<RelatorioChamadosPorDataDto> {
+    return this.http.get<RelatorioChamadosPorDataDto>(`${this.apiUrl}/por-dia?chaDtDataCriacao=${chaDtDataCriacao}`);
   }
 
-  getPorCategoria(): Observable<RelatorioChamadosPorCategoriaDto[]> {
-    return this.http.get<RelatorioChamadosPorCategoriaDto[]>(`${this.apiUrl}/por-categoria`);
+  getPorCategoria(chaDtDataCriacao?: string): Observable<RelatorioChamadosPorCategoriaDto[]> {
+    return this.http.get<RelatorioChamadosPorCategoriaDto[]>(`${this.apiUrl}/por-categoria?chaDtDataCriacao=${chaDtDataCriacao}`);
   }
 }
