@@ -22,11 +22,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { FormInputDirective } from '../directives/form-input.directive';
+import { ErrorComponent } from '../error/error.component';
 
 @Component({
   selector: 'app-dropdown-select',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ErrorComponent],
   template: `
     <label *ngIf="label" class="block mb-1 font-medium"
       >{{ label }}
@@ -51,6 +52,9 @@ import { FormInputDirective } from '../directives/form-input.directive';
         {{ opt[labelKey] }}
       </option>
     </select>
+    @if (error) {
+    <app-error [error]="error" />
+    }
   `,
   providers: [
     {
@@ -70,7 +74,6 @@ export class SelectComponent implements ControlValueAccessor, OnInit {
   @Input() labelKey: string = 'label';
   @Input() valueKey: string = 'value';
   @Input() error: string | null = null;
-
 
   @Output() selectedObject = new EventEmitter<any>();
   ngControl = contentChild(FormInputDirective, { read: NgControl });

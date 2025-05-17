@@ -17,12 +17,12 @@ import { PageRequest } from '../../models/page';
     class: 'flex items-center gap-3',
   },
   template: `
-    <p class="text-pec-tx-secondary font-normal">Página:</p>
-    <strong class="flex items-center gap-2.5 text-pec-tx-primary">
+    <p class="text-gray-600 font-normal">Página:</p>
+    <strong class="flex items-center gap-2.5 text-black">
       <button
         type="button"
         (click)="prevPage()"
-        class="disabled:text-pec-tx-secondary"
+        class="disabled:text-gray-600"
         [disabled]="currentPage().page === 0"
       >
         <fa-icon icon="angle-left" class="text-xl" />
@@ -31,13 +31,14 @@ import { PageRequest } from '../../models/page';
       <button
         type="button"
         (click)="nextPage()"
-        class="disabled:text-pec-tx-secondary"
-        [disabled]="currentPage().page! >= totalPages()! - 1"
+        class="disabled:text-gray-600"
+        [disabled]="!hasNextPage()"
       >
         <fa-icon icon="angle-right" class="text-xl" />
       </button>
     </strong>
-    <p class="text-pec-tx-secondary font-normal">Itens:</p>
+
+    <p class="text-gray-600 font-normal">Itens:</p>
     <strong class="flex items-center gap-2.5 text-pec-tx-primary">
       <button
         type="button"
@@ -70,48 +71,48 @@ export class PaginationComponent {
   protected minSize = signal<number>(10);
 
   nextPage() {
-    this.currentPage.update((currentPage) => {
-      if (currentPage.page! < this.totalPages() - 1) {
-        currentPage.page! += 1;
-      }
-      this.pageChange.emit(currentPage);
-      return currentPage;
-    });
+    const page = this.currentPage().page ?? 0;
+    if (page < this.totalPages() - 1) {
+      const updated = { ...this.currentPage(), page: page + 1 };
+      this.currentPage.set(updated);
+      this.pageChange.emit(updated);
+    }
   }
 
   prevPage() {
-    this.currentPage.update((currentPage) => {
-      if (currentPage.page! > 0) {
-        currentPage.page! -= 1;
-      }
-      this.pageChange.emit(currentPage);
-      return currentPage;
-    });
+    const page = this.currentPage().page ?? 0;
+    if (page > 0) {
+      const updated = { ...this.currentPage(), page: page - 1 };
+      this.currentPage.set(updated);
+      this.pageChange.emit(updated);
+    }
   }
 
   addSize() {
-    this.currentPage.update((currentPage) => {
-      if (currentPage.size! < this.maxSize()) {
-        currentPage.page = 0;
-        currentPage.size! += 10;
-      }
-      this.pageChange.emit(currentPage);
-      return currentPage;
-    });
+    const size = this.currentPage().size ?? 10;
+    if (size < this.maxSize()) {
+      const updated = { ...this.currentPage(), size: size + 10, page: 0 };
+      this.currentPage.set(updated);
+      this.pageChange.emit(updated);
+    }
   }
 
   subSize() {
-    this.currentPage.update((currentPage) => {
-      if (currentPage.size! > this.minSize()) {
-        currentPage.page = 0;
-        currentPage.size! -= 10;
-      }
-      this.pageChange.emit(currentPage);
-      return currentPage;
-    });
+    const size = this.currentPage().size ?? 10;
+    if (size > this.minSize()) {
+      const updated = { ...this.currentPage(), size: size - 10, page: 0 };
+      this.currentPage.set(updated);
+      this.pageChange.emit(updated);
+    }
   }
 
-  reset<T>(defaultValue?: T): void {
-    this.currentPage.set(defaultValue ?? { page: 0, size: 10 });
+  hasNextPage(): boolean {
+    const page = this.currentPage().page ?? 0;
+    return page < (this.totalPages() ?? 0) - 1;
+  }
+
+  reset(defaultValue: PageRequest = { page: 0, size: 10 }): void {
+    this.currentPage.set(defaultValue);
+    this.pageChange.emit(defaultValue);
   }
 }
