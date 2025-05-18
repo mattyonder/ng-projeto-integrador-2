@@ -1,10 +1,8 @@
-import { StatusEnum } from '../../../enums/status-enum';
-
 export interface ITicketForm {
-  chaTxTitulo: string;
-  chaTxDescricao: string;
+  chaTxTitulo?: string;
+  chaTxDescricao?: string;
   chaTxStatus?: string;
-  chaNrIdCliente: number;
+  chaNrIdCliente?: number;
   chaNrIdTecnico?: number;
-  catNrId: number;
+  catNrId?: number;
 }

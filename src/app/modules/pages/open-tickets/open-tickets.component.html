@@ -1,26 +1,28 @@
 <section class="flex flex-col px-5 py-7 gap-3 overflow-y-auto">
     <div class="flex p-1 justify-between items-center">
-        <h1 class="font-bold text-3xl">Chamados</h1>
+        <h1 class="font-bold text-3xl">Chamados em aberto</h1>
     </div>
     <h2 class="font-semibold text-xl">Filtros</h2>
 
     <div class="flex justify-between items-center">
         <div class="flex gap-3">
             <app-form-field label="Titulo">
-                <input appFormInput placeholder="Pesquise por titulo " />
+                <input #titleFilterRef appFormInput placeholder="Pesquise por titulo "
+                    (change)="this.filterByTitle($event)" />
             </app-form-field>
-            <app-dropdown-select [label]="'Categoria'" [options]="categorias" labelKey="catTxDescricao"
-                valueKey="catNrId" placeholder="Selecione uma categoria">
+            <app-dropdown-select [isNotRequired]="false" #categoryFilterRef [label]="'Categoria'"
+                [options]="categoriesPage()?.content!" labelKey="catTxNome" valueKey="catNrId"
+                placeholder="Selecione uma categoria" (selectedObject)="this.filterByCategory($event)">
             </app-dropdown-select>
-
-
         </div>
 
 
         <div class="flex gap-3">
-            <button type="button" class="button-default bg-white text-black hover:bg-slate-50">
+            <button type="button" class="button-default bg-white text-black hover:bg-slate-50"
+                (click)="this.clearFilter()">
                 Limpar</button>
-            <button type="submit" class="button-default bg-primary-3 text-white flex gap-2 hover:bg-primary-2 ">
+            <button type="button" class="button-default bg-primary-3 text-white flex gap-2 hover:bg-primary-2 "
+                (click)="this.applyFilter()">
                 Filtrar
                 <fa-icon icon="filter" />
             </button>
@@ -29,8 +31,8 @@
     <div class="bg-white border-accent rounded-lg shadow-md px-4 py-3 mt-4">
         <div class="flex justify-between">
             <span class="font-semibold">Chamados:</span>
-            <app-pagination totalPages="10" />
-
+            <app-pagination #paginationRef [totalPages]="this.ticketsPage()?.totalPages"
+                (pageChange)="changePage($event)" />
         </div>
 
 
@@ -44,35 +46,28 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
                             Categoria</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
+                            Nome do CLIENTE</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
                             Ações</th>
 
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
+                    @for (ticket of ticketsPage()?.content; track $index) {
                     <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Computador lento</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Software</td>
-
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ticket.chaTxTitulo}}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ticket.catTxNome }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ticket.usuTxNomeCliente }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><app-action icon="user-tag"
-                                title="Atribuir a mim" classIcon="text-lg text-blue-600" />
-                        </td>
+                                title="Atribuir a mim" classIcon="text-lg text-blue-600" (clickAction)="assignToMe(ticket)"/> </td>
                     </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Computador lento</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Software</td>
+                    }@empty {
+                    <tr>
+                        <td colspan="4" class="text-center pt-6 pb-3  text-gray-500">
+                            Nenhum chamado foi atribuido
+                        </td>
+                    </tr> }
 
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><app-action icon="user-tag"
-                                title="Atribuir a mim" classIcon="text-lg text-blue-600" /> </td>
-                    </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Computador lento
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Software</td>
-
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><app-action icon="user-tag"
-                                title="Atribuir a mim" classIcon="text-lg text-blue-600" />
-                        </td>
-                    </tr>
                 </tbody>
             </table>
         </div>

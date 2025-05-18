@@ -1,28 +1,39 @@
 <section class="flex flex-col px-5 py-7 gap-3 overflow-y-auto">
     <div class="flex p-1 justify-between items-center">
         <h1 class="font-bold text-3xl">Meus chamados</h1>
+        <button type="button" (click)="goToTicketForm()"
+            class="flex button-default bg-primary-3 text-white hover:bg-primary-2 gap-3">
+            Novo chamado
+            <fa-icon icon="plus" />
+        </button>
+
     </div>
     <h2 class="font-semibold text-xl">Filtros</h2>
 
     <div class="flex justify-between items-center">
         <div class="flex gap-3">
             <app-form-field label="Titulo">
-                <input appFormInput placeholder="Pesquise por titulo " />
+                <input #titleFilterRef appFormInput placeholder="Pesquise por titulo "
+                    (change)="this.filterByTitle($event)" />
             </app-form-field>
-            <app-dropdown-select [label]="'Categoria'" [options]="categorias" labelKey="catTxDescricao"
-                valueKey="catNrId" placeholder="Selecione uma categoria">
+            <app-dropdown-select [isNotRequired]="false" #categoryFilterRef [label]="'Categoria'"
+                [options]="categoriesPage()?.content!" labelKey="catTxNome" valueKey="catNrId"
+                placeholder="Selecione uma categoria" (selectedObject)="this.filterByCategory($event)">
             </app-dropdown-select>
 
-            <app-dropdown-select [label]="'Status'" [options]="StatusEnum | keyvalue" labelKey="value" valueKey="key"
-                placeholder="Selecione uma categoria">
+            <app-dropdown-select [isNotRequired]="false" #statusFilterRef [label]="'Status'"
+                [options]="StatusEnum | keyvalue" labelKey="value" valueKey="key" placeholder="Selecione uma categoria"
+                (selectedObject)="this.filterByStatus($event)">
             </app-dropdown-select>
         </div>
 
 
         <div class="flex gap-3">
-            <button type="button" class="button-default bg-white text-black hover:bg-slate-50">
+            <button type="button" class="button-default bg-white text-black hover:bg-slate-50"
+                (click)="this.clearFilter()">
                 Limpar</button>
-            <button type="submit" class="button-default bg-primary-3 text-white flex gap-2 hover:bg-primary-2 ">
+            <button type="button" class="button-default bg-primary-3 text-white flex gap-2 hover:bg-primary-2 "
+                (click)="this.applyFilter()">
                 Filtrar
                 <fa-icon icon="filter" />
             </button>
@@ -31,8 +42,8 @@
     <div class="bg-white border-primary-1 rounded-lg shadow-md px-4 py-3 mt-4">
         <div class="flex justify-between">
             <span class="font-semibold">Chamados:</span>
-            <app-pagination totalPages="10" />
-
+            <app-pagination #paginationRef [totalPages]="this.ticketsPage()?.totalPages"
+                (pageChange)="changePage($event)" />
         </div>
 
 
@@ -53,49 +64,51 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
+                    @for (ticket of ticketsPage()?.content; track $index) {
                     <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Computador lento</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Software</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ticket.chaTxTitulo}}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ticket.catTxNome }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <div
-                                class=" bg-yellow-500 rounded-2xl border-2 border-black text-black text-center w-min px-3 py-2">
-                                Em Aberto
-                            </div>
+                            <app-status-badge [status]="ticket.chaTxStatus"></app-status-badge>
+
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><app-action icon="pencil"
-                                title="Editar" classIcon="text-lg text-blue-600" />
+                        <td class="flex px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <app-action icon="pencil" title="Editar" classIcon="text-lg" [ngClass]="{ 
+                                'pointer-events-none text-gray-600': ticket.chaTxStatus !== 'ABERTO',
+                                    'text-blue-600': ticket.chaTxStatus === 'ABERTO'
+                                }" (clickAction)="editTicket(ticket)" />
+                            <app-action icon="trash" title="Excluir chamado" classIcon="text-lg " [ngClass]="{ 
+                                'pointer-events-none text-gray-600': ticket.chaTxStatus !== 'ABERTO',
+                                    'text-red-600': ticket.chaTxStatus === 'ABERTO'
+                                }" (clickAction)="showConfirmationDeleteModal(ticket)" />
                         </td>
                     </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Computador lento</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Software</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <div
-                                class=" bg-blue-500 rounded-2xl border-2 border-black text-white text-center w-min px-3 py-2">
-                                Em Andamento
-                            </div>
+                    }@empty {
+                    <tr>
+                        <td colspan="4" class="text-center pt-6 pb-3  text-gray-500">
+                            Nenhum chamado foi cadastrado
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <app-action icon="magnifying-glass" title="Visualizar" classIcon="text-lg text-blue-600" />
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Computador lento
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Software</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <div
-                                class=" bg-green-500 rounded-2xl border-2 border-black text-white text-center w-min px-3 py-2">
-                                Concluído
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm items-center text-gray-900">
-                            <app-action icon="magnifying-glass" title="Visualizar" classIcon="text-lg text-blue-600" />
-                        </td>
-                    </tr>
+                    </tr> }
+
                 </tbody>
             </table>
         </div>
     </div>
 
 </section>
+
+@if(this.formModalIsOpen()){
+<app-modal enableClose [(open)]="formModalIsOpen">
+    <div class="bg-white border-2 border-black rounded-md p-3 w-[35rem]">
+        <div class="flex justify-between items-center">
+            <h1 class="text-2xl font-semibold">Editar chamado</h1>
+            <button type="button" (click)="closeFormModal()"
+                class="flex button-default  text-black  gap-3 hover:bg-slate-50">
+                X
+            </button>
+        </div>
+        <app-open-ticket [selectedTicket]="selectedTicket() ?? null" (sucessOnEditTicket)="this.afterSuccessEdit()" />
+    </div>
+</app-modal> }
+
+<app-confirmation-modal></app-confirmation-modal>

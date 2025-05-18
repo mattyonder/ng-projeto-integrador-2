@@ -1,58 +1,96 @@
-import { Component, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { IPage, PageRequest } from '../../../../shared/models/page';
+import { ICategoryDto } from '../../../../shared/models/pages/category/category-dto';
+import { CategoryService } from '../../../../shared/services/category.service';
 import { ActionComponent } from '../../../../shared/ui/action/action.component';
+import {
+  ConfirmationModalComponent,
+  ConfirmationModalService,
+} from '../../../../shared/ui/confirmation-modal/confirmation-modal.component';
+import { ModalComponent } from '../../../../shared/ui/modal/modal.component';
 import { PaginationComponent } from '../../../../shared/ui/pagination/pagination.component';
 import { BaseComponent } from '../../../../shared/utils/base.component';
-import { ModalComponent } from "../../../../shared/ui/modal/modal.component";
-import { TicketCategoriesFormComponent } from "./ticket-categories-form/ticket-categories-form.component";
+import { TicketCategoriesFormComponent } from './ticket-categories-form/ticket-categories-form.component';
 
 @Component({
   selector: 'app-ticket-categories',
   standalone: true,
-  imports: [FontAwesomeModule, PaginationComponent, ActionComponent, ModalComponent, TicketCategoriesFormComponent],
+  imports: [
+    FontAwesomeModule,
+    PaginationComponent,
+    ActionComponent,
+    ModalComponent,
+    TicketCategoriesFormComponent,
+    ConfirmationModalComponent,
+  ],
   templateUrl: './ticket-categories.component.html',
   styles: '',
 })
-export class TicketCategoriesComponent extends BaseComponent {
-  modalIsOpen = signal<boolean>(false);
+export class TicketCategoriesComponent extends BaseComponent implements OnInit {
+  readonly #categoryService = inject(CategoryService);
+  readonly confirmationModal = inject(ConfirmationModalService);
+  readonly #destroyRef = inject(DestroyRef);
 
-  openModal() {
-    this.modalIsOpen.set(true);
+  categoriesPage = signal<IPage<ICategoryDto> | null>(null);
+  selectedCategory = signal<ICategoryDto | null>(null);
+  formModalIsOpen = signal<boolean>(false);
+
+  ngOnInit(): void {
+    this.#listCategories({ page: 0, size: 10 });
   }
 
-  closeModal() {
-    this.modalIsOpen.set(false);
+  #listCategories(pageRequest: PageRequest) {
+    this.#categoryService
+      // .getAll(pageRequest)\
+      .getAllForCompany(1, undefined, pageRequest)
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe({
+        next: (res) => this.categoriesPage.set(res),
+        error: () => this.messageService.error('Erro ao carregar categorias.'),
+      });
   }
 
-  deleteCategories(id: number) {}
+  openFormModal() {
+    this.formModalIsOpen.set(true);
+  }
 
-  editCategories(id: number) {}
+  closeFormModal() {
+    this.selectedCategory.set(null);
+    this.formModalIsOpen.set(false);
+  }
 
-  categorias = [
-    {
-      id: 1,
-      nome: 'Tecnologia',
-      descricao: 'Categoria voltada para conteúdos de TI, gadgets e inovação.',
-    },
-    {
-      id: 2,
-      nome: 'Saúde',
-      descricao: 'Assuntos relacionados à saúde física e mental.',
-    },
-    {
-      id: 3,
-      nome: 'Educação',
-      descricao: 'Tudo sobre ensino, aprendizado e métodos educacionais.',
-    },
-    {
-      id: 4,
-      nome: 'Esportes',
-      descricao: 'Informações sobre esportes em geral, atletas e campeonatos.',
-    },
-    {
-      id: 5,
-      nome: 'Entretenimento',
-      descricao: 'Filmes, séries, música, jogos e cultura pop.',
-    },
-  ];
+  changePage(pageRequest: PageRequest) {
+    this.#listCategories(pageRequest);
+  }
+
+  editCategory(category: ICategoryDto) {
+    this.selectedCategory.set(category);
+    this.formModalIsOpen.set(true);
+  }
+
+  showConfirmationDeleteModal(category: ICategoryDto) {
+    this.confirmationModal.openModal({
+      resourceName: `Categoria ${category.catTxNome}`,
+      confirmText: 'Sim, excluir',
+      cancelText: 'Cancelar',
+      callbackExecuteAction: () => this.deleteCategory(category.catNrId),
+    });
+  }
+
+  deleteCategory(id: number) {
+    this.#categoryService.delete(id).subscribe({
+      next: () => {
+        this.messageService.success('Categoria excluída com sucesso');
+        this.#listCategories({ page: 0, size: 10 });
+      },
+      error: () => this.messageService.error('Erro ao excluir categoria'),
+    });
+  }
+
+  afterSuccess() {
+    this.closeFormModal();
+    this.#listCategories({ page: 0, size: 10 });
+  }
 }

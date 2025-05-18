@@ -1,11 +1,9 @@
 export interface IPage<T> {
   content?: T[];
-  page?: {
-    size: number;
-    number: number;
-    totalElements: number;
-    totalPages: number;
-  };
+  size: number;
+  number: number;
+  totalElements: number;
+  totalPages: number;
 }
 
 export class PageRequest {
@@ -28,4 +26,3 @@ export class PageRequest {
     return new PageRequest(size, page, sort);
   }
 }
-
