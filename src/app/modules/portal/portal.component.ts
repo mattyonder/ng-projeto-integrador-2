@@ -6,7 +6,7 @@ import { RouterOutlet } from '@angular/router';
   standalone: true,
   imports: [RouterOutlet],
   template: `
-    <main class="flex h-screen w-screen   justify-center items-center">
+    <main class="h-screen w-screen">
       <router-outlet />
     </main>
   `,
