@@ -7,6 +7,7 @@ import {
   forwardRef,
   inject,
   Injector,
+  input,
   Input,
   model,
   OnInit,
@@ -30,8 +31,9 @@ import { ErrorComponent } from '../error/error.component';
   imports: [CommonModule, FormsModule, ErrorComponent],
   template: `
     <label *ngIf="label" class="block mb-1 font-medium"
-      >{{ label }}
+      >{{ label }} @if(isNotRequired()){
       <span class="text-red-500 ml-1">*</span>
+      }
     </label>
     @if (isRequired()) { }
     <select
@@ -68,6 +70,8 @@ export class SelectComponent implements ControlValueAccessor, OnInit {
   injector = inject(Injector);
   fgd = inject(FormGroupDirective, { optional: true });
 
+  isNotRequired = input<boolean>(true);
+
   @Input() label: string = '';
   @Input() placeholder: string = 'Selecione';
   @Input() options: any[] = [];
@@ -100,6 +104,10 @@ export class SelectComponent implements ControlValueAccessor, OnInit {
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
+  }
+
+  reset(): void {
+    this.selected = null;
   }
 
   handleChange(value: any) {
