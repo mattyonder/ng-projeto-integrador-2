@@ -5,10 +5,9 @@ import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { Subject } from 'rxjs';
 
 @Component({
-  selector: 'app-confirmation-modal',
-  standalone: true,
-  imports: [CommonModule, FontAwesomeModule],
-  template: `
+    selector: 'app-confirmation-modal',
+    imports: [CommonModule, FontAwesomeModule],
+    template: `
     <div
       *ngIf="isOpen()"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
@@ -47,7 +46,7 @@ import { Subject } from 'rxjs';
         </div>
       </div>
     </div>
-  `,
+  `
 })
 export class ConfirmationModalComponent implements OnInit {
   args = signal<ConfirmationModalArgs | null>(null);

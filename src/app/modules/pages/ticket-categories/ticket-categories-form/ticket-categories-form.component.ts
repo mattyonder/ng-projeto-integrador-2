@@ -9,11 +9,10 @@ import { FormFieldComponent } from '../../../../../shared/ui/form-field/form-fie
 import { BaseComponent } from '../../../../../shared/utils/base.component';
 
 @Component({
-  selector: 'app-ticket-categories-form',
-  standalone: true,
-  imports: [FormFieldComponent, FormInputDirective, ReactiveFormsModule],
-  templateUrl: './ticket-categories-form.component.html',
-  styles: '',
+    selector: 'app-ticket-categories-form',
+    imports: [FormFieldComponent, FormInputDirective, ReactiveFormsModule],
+    templateUrl: './ticket-categories-form.component.html',
+    styles: ''
 })
 export class TicketCategoriesFormComponent
   extends BaseComponent

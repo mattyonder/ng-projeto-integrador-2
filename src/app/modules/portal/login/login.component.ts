@@ -8,11 +8,10 @@ import { BaseComponent } from '../../../../shared/utils/base.component';
 import { LoginService } from '../../../../shared/services/login/login.service';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [ReactiveFormsModule, FormFieldComponent, FormInputDirective],
-  templateUrl: './login.component.html',
-  styles: '',
+    selector: 'app-login',
+    imports: [ReactiveFormsModule, FormFieldComponent, FormInputDirective],
+    templateUrl: './login.component.html',
+    styles: ''
 })
 export class LoginComponent extends BaseComponent {
 

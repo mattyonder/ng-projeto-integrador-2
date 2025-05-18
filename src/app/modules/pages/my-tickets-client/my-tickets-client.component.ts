@@ -32,24 +32,23 @@ import { IPage, PageRequest } from './../../../../shared/models/page';
 import { BaseComponent } from './../../../../shared/utils/base.component';
 
 @Component({
-  selector: 'app-my-tickets-client',
-  standalone: true,
-  imports: [
-    PaginationComponent,
-    FontAwesomeModule,
-    ActionComponent,
-    StatusBadgeComponent,
-    ModalComponent,
-    OpenTicketComponent,
-    ConfirmationModalComponent,
-    FormFieldComponent,
-    SelectComponent,
-    KeyValuePipe,
-    FormInputDirective,
-    NgClass,
-  ],
-  templateUrl: './my-tickets-client.component.html',
-  styles: '',
+    selector: 'app-my-tickets-client',
+    imports: [
+        PaginationComponent,
+        FontAwesomeModule,
+        ActionComponent,
+        StatusBadgeComponent,
+        ModalComponent,
+        OpenTicketComponent,
+        ConfirmationModalComponent,
+        FormFieldComponent,
+        SelectComponent,
+        KeyValuePipe,
+        FormInputDirective,
+        NgClass,
+    ],
+    templateUrl: './my-tickets-client.component.html',
+    styles: ''
 })
 export class MyTicketsClientComponent extends BaseComponent implements OnInit {
   readonly #ticketService = inject(TicketService);

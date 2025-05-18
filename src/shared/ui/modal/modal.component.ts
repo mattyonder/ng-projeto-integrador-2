@@ -14,10 +14,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ClickOutsideDirective } from '../directives/click-outside.directive';
 
 @Component({
-  selector: 'app-modal',
-  standalone: true,
-  imports: [FontAwesomeModule, ClickOutsideDirective],
-  template: `
+    selector: 'app-modal',
+    imports: [FontAwesomeModule, ClickOutsideDirective],
+    template: `
     @if (open()) {
     <div
       class="fixed z-[100] inset-0 bg-black bg-opacity-50 flex justify-center items-center"
@@ -38,8 +37,8 @@ import { ClickOutsideDirective } from '../directives/click-outside.directive';
     </div>
     }
   `,
-  styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styles: ``,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModalComponent {
   open = model<boolean>(false);

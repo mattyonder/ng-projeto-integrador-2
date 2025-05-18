@@ -15,18 +15,17 @@ import { BaseComponent } from '../../../../shared/utils/base.component';
 import { TicketCategoriesFormComponent } from './ticket-categories-form/ticket-categories-form.component';
 
 @Component({
-  selector: 'app-ticket-categories',
-  standalone: true,
-  imports: [
-    FontAwesomeModule,
-    PaginationComponent,
-    ActionComponent,
-    ModalComponent,
-    TicketCategoriesFormComponent,
-    ConfirmationModalComponent,
-  ],
-  templateUrl: './ticket-categories.component.html',
-  styles: '',
+    selector: 'app-ticket-categories',
+    imports: [
+        FontAwesomeModule,
+        PaginationComponent,
+        ActionComponent,
+        ModalComponent,
+        TicketCategoriesFormComponent,
+        ConfirmationModalComponent,
+    ],
+    templateUrl: './ticket-categories.component.html',
+    styles: ''
 })
 export class TicketCategoriesComponent extends BaseComponent implements OnInit {
   readonly #categoryService = inject(CategoryService);

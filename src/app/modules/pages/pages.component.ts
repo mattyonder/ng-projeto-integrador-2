@@ -5,7 +5,6 @@ import { BaseComponent } from '../../../shared/utils/base.component';
 
 @Component({
   selector: 'app-home',
-  standalone: true,
   imports: [RouterOutlet, RouterModule, FontAwesomeModule],
   template: `
     <main class="flex bg-gray-200">
@@ -25,7 +24,6 @@ import { BaseComponent } from '../../../shared/utils/base.component';
             >Meu Chamados (tecnico)</a
           >
           <a class="text-link" routerLink="chamados">Chamados (Admin)</a>
-          <a class="text-link">Equipes</a>
           <a class="text-link" routerLink="dashboards">Dashboards</a>
           <a class="text-link" routerLink="chamados-abertos"
             >Chamados em Aberto</a

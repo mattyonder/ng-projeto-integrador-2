@@ -26,20 +26,19 @@ import { StatusBadgeComponent } from '../../../../shared/ui/status-badge/status-
 import { BaseComponent } from '../../../../shared/utils/base.component';
 
 @Component({
-  selector: 'app-tickets',
-  standalone: true,
-  imports: [
-    PaginationComponent,
-    FontAwesomeModule,
-    ActionComponent,
-    FormFieldComponent,
-    FormInputDirective,
-    SelectComponent,
-    KeyValuePipe,
-    StatusBadgeComponent,
-  ],
-  templateUrl: './tickets.component.html',
-  styles: '',
+    selector: 'app-tickets',
+    imports: [
+        PaginationComponent,
+        FontAwesomeModule,
+        ActionComponent,
+        FormFieldComponent,
+        FormInputDirective,
+        SelectComponent,
+        KeyValuePipe,
+        StatusBadgeComponent,
+    ],
+    templateUrl: './tickets.component.html',
+    styles: ''
 })
 export class TicketsComponent extends BaseComponent implements OnInit {
   openDetailsModal(_t41: ITicketDto) {

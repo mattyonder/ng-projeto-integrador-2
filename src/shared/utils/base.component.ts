@@ -4,7 +4,10 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AppErrorHandler } from '../ui/error-handler/error-handler';
 
-@Component({ template: '' })
+@Component({
+    template: '',
+    standalone: false
+})
 export class BaseComponent {
   protected fb = inject(FormBuilder);
   protected errorHandler = inject(AppErrorHandler);

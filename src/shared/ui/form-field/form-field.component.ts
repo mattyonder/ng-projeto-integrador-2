@@ -21,7 +21,10 @@ import { ErrorComponent } from '../error/error.component';
   standalone: true,
   imports: [CommonModule, ErrorComponent],
   template: `
-    <label [for]="label()" class="flex items-center  ml-1 mb-1 text-base font-medium">
+    <label
+      [for]="label()"
+      class="flex items-center  ml-1 mb-1 text-base font-medium"
+    >
       {{ label() }}
 
       @if (isRequired()) {

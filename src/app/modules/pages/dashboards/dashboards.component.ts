@@ -1,12 +1,16 @@
-import { ChamadoSemanal, RelatorioChamadosPorTecnicoDto, StatusChamado } from '../../../../shared/services/dashboard/dashboard.service';
-import { ChartComponent, NgApexchartsModule } from 'ng-apexcharts';
 import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { ChartComponent, NgApexchartsModule } from 'ng-apexcharts';
+import {
+  ChamadoSemanal,
+  RelatorioChamadosPorTecnicoDto,
+  StatusChamado,
+} from '../../../../shared/services/dashboard/dashboard.service';
 
 import {
+  ApexChart,
   ApexNonAxisChartSeries,
   ApexResponsive,
-  ApexChart
-} from "ng-apexcharts";
+} from 'ng-apexcharts';
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -17,12 +21,12 @@ export type ChartOptions = {
 
 import {
   ApexAxisChartSeries,
-  ApexXAxis,
   ApexDataLabels,
-  ApexTitleSubtitle,
+  ApexGrid,
   ApexStroke,
-  ApexGrid
-} from "ng-apexcharts";
+  ApexTitleSubtitle,
+  ApexXAxis,
+} from 'ng-apexcharts';
 
 export type ChartOptionsLine = {
   series: ApexAxisChartSeries;
@@ -34,13 +38,14 @@ export type ChartOptionsLine = {
   title: ApexTitleSubtitle;
 };
 
-import {
-  ApexPlotOptions,
-  ApexYAxis,
-  ApexFill
-} from "ng-apexcharts";
-import { DashboardService, RelatorioChamadosPorCategoriaDto, RelatorioChamadosPorDataDto, RelatorioStatusDto } from '../../../../shared/services/dashboard/dashboard.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { ApexFill, ApexPlotOptions, ApexYAxis } from 'ng-apexcharts';
+import {
+  DashboardService,
+  RelatorioChamadosPorCategoriaDto,
+  RelatorioChamadosPorDataDto,
+  RelatorioStatusDto,
+} from '../../../../shared/services/dashboard/dashboard.service';
 
 export type ChartOptionsBar = {
   series: ApexAxisChartSeries;
@@ -57,33 +62,38 @@ export type ChartOptionsBar = {
   selector: 'app-dashboards',
   standalone: true,
   imports: [NgApexchartsModule, FontAwesomeModule],
-  templateUrl: './dashboards.component.html'
+  templateUrl: './dashboards.component.html',
 })
 export class DashboardsComponent implements OnInit {
-  @ViewChild("chart") chartPizza?: ChartComponent;
+  @ViewChild('chart') chartPizza?: ChartComponent;
   public chartOptionsPizza?: Partial<ChartOptions>;
 
-  @ViewChild("chart") chartLine?: ChartComponent;
+  @ViewChild('chart') chartLine?: ChartComponent;
   public chartOptionsLine?: Partial<ChartOptionsLine>;
 
-  @ViewChild("chart") chartBar?: ChartComponent;
+  @ViewChild('chart') chartBar?: ChartComponent;
   public chartOptionsBar?: Partial<ChartOptionsBar>;
 
   // SERVICES
   #dashboardService = inject(DashboardService);
 
   //DTOS
-  relatorioChamadosPorCategoriaDto = signal<RelatorioChamadosPorCategoriaDto[] | null>(null);
-  relatorioChamadosPorDataDto = signal<RelatorioChamadosPorDataDto | null>(null)
-  relatorioStatusDto = signal<RelatorioStatusDto[] | null>(null)
-  relatorioChamadosPorTecnicoDto = signal<RelatorioChamadosPorTecnicoDto[] | null>(null)
+  relatorioChamadosPorCategoriaDto = signal<
+    RelatorioChamadosPorCategoriaDto[] | null
+  >(null);
+  relatorioChamadosPorDataDto = signal<RelatorioChamadosPorDataDto | null>(
+    null
+  );
+  relatorioStatusDto = signal<RelatorioStatusDto[] | null>(null);
+  relatorioChamadosPorTecnicoDto = signal<
+    RelatorioChamadosPorTecnicoDto[] | null
+  >(null);
   relatorioChamadoSemanal = signal<ChamadoSemanal[] | null>(null);
 
   //ENUMS
-  statusChamado = StatusChamado
+  statusChamado = StatusChamado;
 
   ngOnInit(): void {
-
     const hoje = new Date();
     const dataFormatada = hoje.toISOString().split('T')[0];
 
@@ -112,15 +122,17 @@ export class DashboardsComponent implements OnInit {
   getChamadosSemanal() {
     this.#dashboardService.getChamadosSemanais().subscribe({
       next: (dados) => {
-        const ordenado = dados.sort((a, b) => a.diaSemanaNumero - b.diaSemanaNumero);
+        const ordenado = dados.sort(
+          (a, b) => a.diaSemanaNumero - b.diaSemanaNumero
+        );
 
         // Extrai os nomes dos dias e as quantidades
-        const categories = ordenado.map(item => item.diaSemanaNome);
-        const seriesData = ordenado.map(item => item.total);
+        const categories = ordenado.map((item) => item.diaSemanaNome);
+        const seriesData = ordenado.map((item) => item.total);
 
         this.getChartBar(seriesData, categories);
       },
-      error: (erro) => console.error('Erro ao buscar chamados semanais', erro)
+      error: (erro) => console.error('Erro ao buscar chamados semanais', erro),
     });
   }
 
@@ -128,110 +140,109 @@ export class DashboardsComponent implements OnInit {
     this.#dashboardService.getPorTecnico(dataSelecionada).subscribe({
       next: (res) => {
         this.relatorioChamadosPorTecnicoDto.set(res);
-      }
-    })
+      },
+    });
   }
 
   getPorStatus(dataSelecionada?: string) {
     this.#dashboardService.getPorStatus(dataSelecionada).subscribe({
       next: (res) => {
         this.relatorioStatusDto.set(res);
-      }
-    })
+      },
+    });
   }
 
   getPorDia(dataSelecionada?: string) {
     this.#dashboardService.getPorDia(dataSelecionada).subscribe({
       next: (res) => {
         this.relatorioChamadosPorDataDto.set(res);
-      }
-    })
+      },
+    });
   }
 
   getPorCategoria(dataSelecionada?: string) {
     this.#dashboardService.getPorCategoria(dataSelecionada).subscribe({
       next: (res) => {
-        const series = res.map(item => item.totalChamados);
-        const labels = res.map(item => item.categoria);
+        const series = res.map((item) => item.totalChamados);
+        const labels = res.map((item) => item.categoria);
 
         this.getChartPizza(series, labels);
-      }
-    })
+      },
+    });
   }
 
   getChartBar(series: number[], label: string[]) {
     this.chartOptionsBar = {
       series: [
         {
-          name: "Inflation",
-          data: series
-        }
+          name: 'Inflation',
+          data: series,
+        },
       ],
       chart: {
-        type: "bar",
-        height: '100%'
+        type: 'bar',
+        height: '100%',
       },
       plotOptions: {
         bar: {
           dataLabels: {
-            position: "top" // top, center, bottom
-          }
-        }
+            position: 'top', // top, center, bottom
+          },
+        },
       },
       dataLabels: {
         enabled: true,
         offsetY: -20,
         style: {
-          fontSize: "12px",
-          colors: ["#304758"]
-        }
+          fontSize: '12px',
+          colors: ['#304758'],
+        },
       },
 
       xaxis: {
         categories: label,
-        position: "bottom",
+        position: 'bottom',
         labels: {
-          offsetY: -5
+          offsetY: -5,
         },
         axisBorder: {
-          show: false
+          show: false,
         },
         axisTicks: {
-          show: false
+          show: false,
         },
         crosshairs: {
           fill: {
-            type: "gradient",
+            type: 'gradient',
             gradient: {
-              colorFrom: "#D8E3F0",
-              colorTo: "#BED1E6",
+              colorFrom: '#D8E3F0',
+              colorTo: '#BED1E6',
               stops: [0, 100],
               opacityFrom: 0.4,
-              opacityTo: 0.5
-            }
-          }
+              opacityTo: 0.5,
+            },
+          },
         },
         tooltip: {
           enabled: true,
-          offsetY: -35
-        }
+          offsetY: -35,
+        },
       },
       fill: {
-        type: "solid",
-        colors: ["#1b8ef2"]
+        type: 'solid',
+        colors: ['#1b8ef2'],
       },
       yaxis: {
         axisBorder: {
-          show: false
+          show: false,
         },
         axisTicks: {
-          show: false
+          show: false,
         },
         labels: {
           show: false,
-
-        }
-      }
+        },
+      },
     };
   }
 
@@ -239,46 +250,46 @@ export class DashboardsComponent implements OnInit {
     this.chartOptionsLine = {
       series: [
         {
-          name: "Desktops",
-          data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
-        }
+          name: 'Desktops',
+          data: [10, 41, 35, 51, 49, 62, 69, 91, 148],
+        },
       ],
       chart: {
         height: 350,
-        type: "line",
+        type: 'line',
         zoom: {
-          enabled: false
-        }
+          enabled: false,
+        },
       },
       dataLabels: {
-        enabled: false
+        enabled: false,
       },
       stroke: {
-        curve: "straight"
+        curve: 'straight',
       },
       title: {
-        text: "Product Trends by Month",
-        align: "left"
+        text: 'Product Trends by Month',
+        align: 'left',
       },
       grid: {
         row: {
-          colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
-          opacity: 0.5
-        }
+          colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+          opacity: 0.5,
+        },
       },
       xaxis: {
         categories: [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep"
-        ]
-      }
+          'Jan',
+          'Feb',
+          'Mar',
+          'Apr',
+          'May',
+          'Jun',
+          'Jul',
+          'Aug',
+          'Sep',
+        ],
+      },
     };
   }
 
@@ -287,7 +298,7 @@ export class DashboardsComponent implements OnInit {
       series: series,
       chart: {
         width: 380,
-        type: "pie"
+        type: 'pie',
       },
       labels: label,
       responsive: [
@@ -295,14 +306,14 @@ export class DashboardsComponent implements OnInit {
           breakpoint: 480,
           options: {
             chart: {
-              width: 200
+              width: 200,
             },
             legend: {
-              position: "bottom"
-            }
-          }
-        }
-      ]
+              position: 'bottom',
+            },
+          },
+        },
+      ],
     };
   }
 }

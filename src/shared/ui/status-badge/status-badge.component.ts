@@ -3,11 +3,10 @@ import { Component, Input } from '@angular/core';
 import { StatusEnum } from '../../enums/status-enum';
 
 @Component({
-  standalone: true,
-  selector: 'app-status-badge',
-  templateUrl: './status-badge.component.html',
-  imports: [NgClass],
-  styleUrls: ['./status-badge.component.css'],
+    selector: 'app-status-badge',
+    templateUrl: './status-badge.component.html',
+    imports: [NgClass],
+    styleUrls: ['./status-badge.component.css']
 })
 export class StatusBadgeComponent {
   @Input() status!: keyof typeof StatusEnum;

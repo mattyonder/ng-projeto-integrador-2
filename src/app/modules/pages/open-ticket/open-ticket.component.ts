@@ -27,17 +27,16 @@ import { CategoryService } from '../../../../shared/services/category.service';
 import { TicketService } from '../../../../shared/services/ticket.service';
 
 @Component({
-  selector: 'app-open-ticket',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    FormFieldComponent,
-    FormInputDirective,
-    SelectComponent,
-  ],
-  templateUrl: './open-ticket.component.html',
-  styles: '',
+    selector: 'app-open-ticket',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        FormFieldComponent,
+        FormInputDirective,
+        SelectComponent,
+    ],
+    templateUrl: './open-ticket.component.html',
+    styles: ''
 })
 export class OpenTicketComponent extends BaseComponent implements OnInit {
   readonly #ticketService = inject(TicketService);
