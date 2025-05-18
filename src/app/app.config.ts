@@ -5,7 +5,7 @@ import { provideRouter } from '@angular/router';
 import { provideToastr } from 'ngx-toastr';
 import { provideUi } from '../shared/ui/providers/ui.config';
 import { routes } from './app.routes';
-import { authInterceptor } from '../shared/core/Interceptor/auth.interceptor';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,6 +15,6 @@ export const appConfig: ApplicationConfig = {
     provideToastr(),
     provideUi(),
     provideHttpClient(),
-    provideHttpClient(withInterceptors([authInterceptor]))
+    provideHttpClient(withInterceptors([authInterceptor])),
   ],
 };
