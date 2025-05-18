@@ -1,4 +1,4 @@
-import { ChamadoSemanal, RelatorioChamadosPorTecnicoDto, StatusChamado } from './../../../../shared/core/services/dashboard/dashboard.service';
+import { ChamadoSemanal, RelatorioChamadosPorTecnicoDto, StatusChamado } from '../../../../shared/services/dashboard/dashboard.service';
 import { ChartComponent, NgApexchartsModule } from 'ng-apexcharts';
 import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 
@@ -39,7 +39,7 @@ import {
   ApexYAxis,
   ApexFill
 } from "ng-apexcharts";
-import { DashboardService, RelatorioChamadosPorCategoriaDto, RelatorioChamadosPorDataDto, RelatorioStatusDto } from '../../../../shared/core/services/dashboard/dashboard.service';
+import { DashboardService, RelatorioChamadosPorCategoriaDto, RelatorioChamadosPorDataDto, RelatorioStatusDto } from '../../../../shared/services/dashboard/dashboard.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 export type ChartOptionsBar = {

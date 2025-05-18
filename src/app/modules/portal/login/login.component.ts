@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormGroupOf } from '../../../../shared/core/types/form-groups-of';
 import { ILoginForm } from '../../../../shared/models/portal/login';
 import { FormInputDirective } from '../../../../shared/ui/directives/form-input.directive';
 import { FormFieldComponent } from '../../../../shared/ui/form-field/form-field.component';
 import { BaseComponent } from '../../../../shared/utils/base.component';
+import { LoginService } from '../../../../shared/services/login/login.service';
 
 @Component({
   selector: 'app-login',
@@ -14,12 +15,16 @@ import { BaseComponent } from '../../../../shared/utils/base.component';
   styles: '',
 })
 export class LoginComponent extends BaseComponent {
+
+  //services
+  #loginService = inject(LoginService)
+
   loginFg = this.fb.group<FormGroupOf<ILoginForm>>({
-    usu_tx_email: this.fb.control(null, [
+    usuTxEmail: this.fb.control(null, [
       Validators.required,
       Validators.email,
     ]),
-    usu_tx_senha: this.fb.control(null, Validators.required),
+    usuTxSenha: this.fb.control(null, Validators.required),
   });
 
   
@@ -32,8 +37,10 @@ export class LoginComponent extends BaseComponent {
 
     const form = this.loginFg.getRawValue() as ILoginForm;
 
-    console.log(form);
-    this.messageService.success('SUCESSO MOCKADO !!');
-    this.router.navigate(['paginas']);
+    this.#loginService.login(form).subscribe({
+      next: (res) => {
+        this.router.navigate(['paginas']);
+      }
+    })
   }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { BaseService } from '../../../utils/base.service';
+import { BaseService } from '../../utils/base.service';
 
 export interface RelatorioStatusDto {
   status: string;
