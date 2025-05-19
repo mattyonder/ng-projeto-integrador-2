@@ -61,13 +61,22 @@ export class LoginService {
     return localStorage.getItem('token');
   }
 
-  getUserRole(): IRoleDto | null {
-    if (this._role) return this._role as IRoleDto;
+  getUserRole(): string | null {
+    // if (this._role) return this._role as IRoleDto;
     // pega do token se não tiver em memória
     const token = this.getToken();
     if (!token) return null;
     const payload = JSON.parse(atob(token.split('.')[1]));
     return payload.role ?? null;
+  }
+
+  getUserEmail(): string | null {
+    // if (this._role) return this._role as IRoleDto;
+    // pega do token se não tiver em memória
+    const token = this.getToken();
+    if (!token) return null;
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.sub ?? null;
   }
 
   getUserEmpId(): number | null {

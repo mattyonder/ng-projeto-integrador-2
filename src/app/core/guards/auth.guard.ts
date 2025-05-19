@@ -30,7 +30,7 @@ export class AuthGuard implements CanActivate {
 
     const userRole = this.auth.getUserRole();
     const requiredRoles = route.data['roles'] as string[] | undefined;
-    if (requiredRoles && !requiredRoles.includes(userRole?.rolTxDescricao!)) {
+    if (requiredRoles && !requiredRoles.includes(userRole!)) {
       this.toastr.error('Você não tem permissão para acessar essa página.');
       return this.router.createUrlTree(['/portal']);
     }

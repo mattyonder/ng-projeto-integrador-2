@@ -58,8 +58,13 @@ export class PagesComponent extends BaseComponent implements OnInit {
   role = signal<IRoleDto | null>(null);
   private login = inject(LoginService);
   ngOnInit() {
-    const role = this.login.getUserRole();
-    this.role.set(role);
+    const roles = this.login.getUserRole();
+    if (roles) {
+    this.role.set({
+      rolTxDescricao: roles
+    });
+  }
+    console.log(this.role()?.rolTxDescricao)
   }
 
   logout() {
