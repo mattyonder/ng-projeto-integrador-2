@@ -1,54 +1,6 @@
-<section class="flex flex-col px-5 py-7 gap-3 overflow-y-auto">
-    <div class="p-1">
-        <h1 class="font-bold text-3xl">Pagina Inicial</h1>
-    </div>
+<app-dashboards></app-dashboards>
+<section>
 
-    <h2 class="font-semibold text-xl">Status dos chamados</h2>
-
-    <div class="flex w-full justify-around gap-4">
-        @for (item of statusList ; track $index) {
-        @let data = getStatusData(item.status);
-
-        @switch (item.status) {
-        @case ('ABERTO') {
-        <div class="flex flex-col p-3 bg-blue-600 text-white rounded-xl font-medium gap-2 w-[16rem]">
-            <span>Em aberto</span>
-            <div class="flex justify-between font-light">
-                <span>Total</span>
-                <span>{{ data?.total == null ? '0' : data?.total}}</span>
-            </div>
-        </div>
-        }
-        @case ('EM_ANDAMENTO') {
-        <div class="flex flex-col p-3 bg-yellow-600 text-white rounded-xl font-medium gap-2 w-[16rem]">
-            <span>Em Andamento</span>
-            <div class="flex justify-between font-light">
-                <span>Total</span>
-                <span>{{ data?.total == null ? '0' : data?.total}}</span>
-            </div>
-        </div>
-        }
-        @case ('RESOLVIDO') {
-        <div class="flex flex-col p-3  bg-green-600 text-white rounded-xl font-medium gap-2 w-[16rem]">
-            <span>Resolvidos</span>
-            <div class="flex justify-between font-light">
-                <span>Total</span>
-                <span>{{ data?.total == null ? '0' : data?.total}}</span>
-            </div>
-        </div>
-        }
-        @case ('FECHADO') {
-        <div class="flex flex-col p-3  bg-red-500 text-white rounded-xl font-medium gap-2 w-[16rem]">
-            <span>Fechado</span>
-            <div class="flex justify-between font-light">
-                <span>Total</span>
-                <span>{{ data?.total == null ? '0' : data?.total}}</span>
-            </div>
-        </div>
-        }
-        }
-        }
-    </div>
 
     <!-- <div class="bg-white border-accent rounded-lg shadow-md px-4 py-3 mt-4">
         <span class="font-semibold">Performance dos técnicos</span>

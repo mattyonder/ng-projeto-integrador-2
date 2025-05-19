@@ -50,11 +50,10 @@ import {
 export type ChartOptionsBar = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
-  dataLabels: ApexDataLabels;
-  plotOptions: ApexPlotOptions;
-  yaxis: ApexYAxis;
   xaxis: ApexXAxis;
-  fill: ApexFill;
+  dataLabels: ApexDataLabels;
+  grid: ApexGrid;
+  stroke: ApexStroke;
   title: ApexTitleSubtitle;
 };
 
@@ -93,6 +92,13 @@ export class DashboardsComponent implements OnInit {
   //ENUMS
   statusChamado = StatusChamado;
 
+  statusList = [
+    { status: 'ABERTO' },
+    { status: 'EM_ANDAMENTO' },
+    { status: 'RESOLVIDO' },
+    { status: 'FECHADO' }
+  ];
+
   ngOnInit(): void {
     const hoje = new Date();
     const dataFormatada = hoje.toISOString().split('T')[0];
@@ -103,6 +109,11 @@ export class DashboardsComponent implements OnInit {
     this.getPorStatus(dataFormatada);
     this.getPorTecnico(dataFormatada);
     this.getChamadosSemanal();
+  }
+
+
+  getStatusData(status: string): RelatorioStatusDto | null {
+    return this.relatorioStatusDto()!.find(s => s.status === status) ?? null;
   }
 
   onDateChange(event: Event) {
@@ -131,6 +142,7 @@ export class DashboardsComponent implements OnInit {
         const seriesData = ordenado.map((item) => item.total);
 
         this.getChartBar(seriesData, categories);
+        // this.getChartLine(seriesData, categories);
       },
       error: (erro) => console.error('Erro ao buscar chamados semanais', erro),
     });
@@ -180,82 +192,44 @@ export class DashboardsComponent implements OnInit {
         },
       ],
       chart: {
-        type: 'bar',
+        type: 'line',
         height: '100%',
+        zoom: {
+          enabled: false
+        }
       },
-      plotOptions: {
-        bar: {
-          dataLabels: {
-            position: 'top', // top, center, bottom
-          },
-        },
+      stroke: {
+        curve: 'straight',
       },
       dataLabels: {
-        enabled: true,
-        offsetY: -20,
-        style: {
-          fontSize: '12px',
-          colors: ['#304758'],
-        },
+        enabled: true
       },
-
       xaxis: {
         categories: label,
         position: 'bottom',
         labels: {
           offsetY: -5,
-        },
-        axisBorder: {
-          show: false,
-        },
-        axisTicks: {
-          show: false,
-        },
-        crosshairs: {
-          fill: {
-            type: 'gradient',
-            gradient: {
-              colorFrom: '#D8E3F0',
-              colorTo: '#BED1E6',
-              stops: [0, 100],
-              opacityFrom: 0.4,
-              opacityTo: 0.5,
-            },
-          },
-        },
-        tooltip: {
-          enabled: true,
-          offsetY: -35,
-        },
+        }
       },
-      fill: {
-        type: 'solid',
-        colors: ['#1b8ef2'],
-      },
-      yaxis: {
-        axisBorder: {
-          show: false,
-        },
-        axisTicks: {
-          show: false,
-        },
-        labels: {
-          show: false,
-        },
+      grid: {
+        row: {
+          colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+          opacity: 0.5
+        }
       },
     };
   }
 
-  getChartLine() {
+  getChartLine(series: number[], label: string[]) {
     this.chartOptionsLine = {
       series: [
         {
           name: 'Desktops',
-          data: [10, 41, 35, 51, 49, 62, 69, 91, 148],
+          data: series,
         },
       ],
       chart: {
-        height: 350,
+        height: '100%',
         type: 'line',
         zoom: {
           enabled: false,
@@ -267,10 +241,6 @@ export class DashboardsComponent implements OnInit {
       stroke: {
         curve: 'straight',
       },
-      title: {
-        text: 'Product Trends by Month',
-        align: 'left',
-      },
       grid: {
         row: {
           colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
@@ -278,17 +248,7 @@ export class DashboardsComponent implements OnInit {
         },
       },
       xaxis: {
-        categories: [
-          'Jan',
-          'Feb',
-          'Mar',
-          'Apr',
-          'May',
-          'Jun',
-          'Jul',
-          'Aug',
-          'Sep',
-        ],
+        categories: label
       },
     };
   }

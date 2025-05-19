@@ -37,7 +37,7 @@ import { BaseComponent } from '../../../shared/utils/base.component';
           <a class="text-link" routerLink="categorias"
             >Categorias de Chamados</a
           >
-          <a class="text-link" routerLink="dashboards">Dashboards</a>
+          <!-- <a class="text-link" routerLink="dashboards">Dashboards</a> -->
           } }
 
           <a class="text-link">Configurações</a>

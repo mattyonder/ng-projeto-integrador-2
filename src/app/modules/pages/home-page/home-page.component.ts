@@ -1,10 +1,12 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { DashboardService, RelatorioStatusDto } from '../../../../shared/services/dashboard/dashboard.service';
+import { DashboardsComponent } from "../dashboards/dashboards.component";
 
 @Component({
     selector: 'app-home-page',
     standalone: true,
-    templateUrl: './home-page.component.html'
+    templateUrl: './home-page.component.html',
+    imports: [DashboardsComponent]
 })
 export class HomePageComponent implements OnInit {
 
