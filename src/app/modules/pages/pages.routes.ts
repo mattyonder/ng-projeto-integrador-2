@@ -22,36 +22,43 @@ export const PAGES_ROUTES: Routes = [
       },
       {
         path: 'abrir-chamado',
+        data: { roles: ['CLIENTE'] },
         canActivate: [AuthGuard],
         component: OpenTicketComponent,
       },
       {
         path: 'meus-chamados-cliente',
+        data: { roles: ['CLIENTE'] },
         canActivate: [AuthGuard],
         component: MyTicketsClientComponent,
       },
       {
         path: 'dashboards',
+        data: { roles: ['TECNICO', 'ADMIN'] },
         canActivate: [AuthGuard],
         component: DashboardsComponent,
       },
       {
         path: 'meus-chamados-tecnico',
+        data: { roles: ['TECNICO'] },
         canActivate: [AuthGuard],
         component: MyTicketsTechniciansComponent,
       },
       {
         path: 'chamados',
         canActivate: [AuthGuard],
+        data: { roles: ['ADMIN'] },
         component: TicketsComponent,
       },
       {
         path: 'chamados-abertos',
+        data: { roles: ['TECNICO'] },
         canActivate: [AuthGuard],
         component: OpenTicketsComponent,
       },
       {
         path: 'categorias',
+        data: { roles: ['ADMIN'] },
         canActivate: [AuthGuard],
         component: TicketCategoriesComponent,
       },

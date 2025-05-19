@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
+import { IRoleDto } from '../../core/role.dto';
 import { ILoginForm } from '../../models/portal/login';
 import { AuthResponseDto } from './dto/auth-response-dto';
 
@@ -10,28 +11,45 @@ import { AuthResponseDto } from './dto/auth-response-dto';
 })
 export class LoginService {
   private baseUrl = 'http://localhost:8080/auth';
-
   private http = inject(HttpClient);
   private router = inject(Router);
+
+  private _role: IRoleDto | null = null;
+  private _empNrId: number | null = null;
 
   login(data: ILoginForm): Observable<AuthResponseDto> {
     return this.http.post<AuthResponseDto>(`${this.baseUrl}/login`, data).pipe(
       tap((response) => {
-        localStorage.setItem('token', response.token);
+        this.handleTokenResponse(response.token);
       })
     );
   }
 
   register(data: ILoginForm): Observable<AuthResponseDto> {
-    return this.http.post<AuthResponseDto>(`${this.baseUrl}/register`, data).pipe(
-      tap((response) => {
-        localStorage.setItem('token', response.token);
-      })
-    );
+    return this.http
+      .post<AuthResponseDto>(`${this.baseUrl}/register`, data)
+      .pipe(
+        tap((response) => {
+          this.handleTokenResponse(response.token);
+        })
+      );
+  }
+
+  private handleTokenResponse(token: string) {
+    localStorage.setItem('token', token);
+
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    this._role = payload.role ?? null;
+    this._empNrId = payload.empNrId ?? null;
+
+    // redireciona após login
+    this.router.navigate(['/portal']);
   }
 
   logout() {
     localStorage.removeItem('token');
+    this._role = null;
+    this._empNrId = null;
     this.router.navigate(['/login']);
   }
 
@@ -41,5 +59,22 @@ export class LoginService {
 
   getToken(): string | null {
     return localStorage.getItem('token');
+  }
+
+  getUserRole(): IRoleDto | null {
+    if (this._role) return this._role as IRoleDto;
+    // pega do token se não tiver em memória
+    const token = this.getToken();
+    if (!token) return null;
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.role ?? null;
+  }
+
+  getUserEmpId(): number | null {
+    if (this._empNrId !== null) return this._empNrId;
+    const token = this.getToken();
+    if (!token) return null;
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.empNrId ?? null;
   }
 }

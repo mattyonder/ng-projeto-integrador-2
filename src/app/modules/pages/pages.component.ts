@@ -1,38 +1,48 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { IRoleDto } from '../../../shared/core/role.dto';
+import { LoginService } from '../../../shared/services/login/login.service';
 import { BaseComponent } from '../../../shared/utils/base.component';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterOutlet, RouterModule, FontAwesomeModule],
+  imports: [RouterOutlet, RouterModule, FontAwesomeModule, CommonModule],
   template: `
     <main class="flex bg-gray-200">
-      <!-- ASIDE FIXO -->
       <aside
-        class="fixed top-0 left-0 h-screen w-1/6 bg-primary-2 border-primary-1 rounded-r-xl shadow-xl py-3 px-3 text-white font-fixed z-50 text-wrap break-words"
+        class="fixed top-0 left-0 h-screen w-1/6 bg-primary-2 border-primary-1 rounded-r-xl shadow-xl py-3 px-3 text-white font-fixed z-50"
       >
         <span class="text-xl block mb-6">TS ServiceHub</span>
 
-        <div class="flex flex-col px-5 gap-4">
+        <nav class="flex flex-col px-5 gap-4">
+          <!-- todo mundo vê Home -->
           <a class="text-link" routerLink="home">Home</a>
+
+          @switch (this.role()?.rolTxDescricao!) { @case ('CLIENTE'){
           <a class="text-link" routerLink="abrir-chamado">Abrir Chamado</a>
           <a class="text-link" routerLink="meus-chamados-cliente"
-            >Meu Chamados (cliente)</a
+            >Meus Chamados</a
           >
+          } @case ('TECNICO') {
           <a class="text-link" routerLink="meus-chamados-tecnico"
-            >Meu Chamados (tecnico)</a
+            >Meus Chamados</a
           >
-          <a class="text-link" routerLink="chamados">Chamados (Admin)</a>
-          <a class="text-link" routerLink="dashboards">Dashboards</a>
           <a class="text-link" routerLink="chamados-abertos"
             >Chamados em Aberto</a
           >
+          } @case ('ADMIN') {
+          <a class="text-link" routerLink="chamados">Chamados</a>
           <a class="text-link" routerLink="categorias"
             >Categorias de Chamados</a
           >
+          <a class="text-link" routerLink="dashboards">Dashboards</a>
+          } }
+
           <a class="text-link">Configurações</a>
-        </div>
+          <a class="text-link cursor-pointer" (click)="this.logout()">Sair</a>
+        </nav>
       </aside>
 
       <div
@@ -44,4 +54,15 @@ import { BaseComponent } from '../../../shared/utils/base.component';
   `,
   styles: '',
 })
-export class PagesComponent extends BaseComponent {}
+export class PagesComponent extends BaseComponent implements OnInit {
+  role = signal<IRoleDto | null>(null);
+  private login = inject(LoginService);
+  ngOnInit() {
+    const role = this.login.getUserRole();
+    this.role.set(role);
+  }
+
+  logout() {
+    this.login.logout();
+  }
+}

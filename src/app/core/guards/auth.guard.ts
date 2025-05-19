@@ -1,6 +1,12 @@
 // src/app/core/guards/auth.guard.ts
 import { Injectable } from '@angular/core';
-import { CanActivate, Router, UrlTree } from '@angular/router';
+import {
+  ActivatedRouteSnapshot,
+  CanActivate,
+  Router,
+  RouterStateSnapshot,
+  UrlTree,
+} from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { LoginService } from '../../../shared/services/login/login.service';
@@ -13,14 +19,22 @@ export class AuthGuard implements CanActivate {
     private toastr: ToastrService
   ) {}
 
-  canActivate(): boolean | UrlTree | Observable<boolean | UrlTree> {
-    if (this.auth.isAuthenticated()) {
-      return true;
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): boolean | UrlTree | Observable<boolean | UrlTree> {
+    if (!this.auth.isAuthenticated()) {
+      this.toastr.error('Você precisa fazer login.');
+      return this.router.createUrlTree(['/login']);
     }
 
-    this.toastr.error(
-      'Houve um problema no acesso, por favor faça login novamente.'
-    );
-    return this.router.createUrlTree(['/login']);
+    const userRole = this.auth.getUserRole();
+    const requiredRoles = route.data['roles'] as string[] | undefined;
+    if (requiredRoles && !requiredRoles.includes(userRole?.rolTxDescricao!)) {
+      this.toastr.error('Você não tem permissão para acessar essa página.');
+      return this.router.createUrlTree(['/portal']);
+    }
+
+    return true;
   }
 }
