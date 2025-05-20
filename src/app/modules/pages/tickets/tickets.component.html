@@ -16,8 +16,8 @@
             </app-dropdown-select>
 
             <app-dropdown-select [isNotRequired]="false" #statusFilterRef [label]="'Status'"
-                [options]="StatusEnum | keyvalue" labelKey="value" valueKey="key"
-                placeholder="Selecione uma categoria" (selectedObject)="this.filterByStatus($event)">
+                [options]="StatusEnum | keyvalue" labelKey="value" valueKey="key" placeholder="Selecione uma categoria"
+                (selectedObject)="this.filterByStatus($event)">
             </app-dropdown-select>
         </div>
 
@@ -66,9 +66,11 @@
                             <app-status-badge [status]="ticket.chaTxStatus"></app-status-badge>
 
                         </td>
-                        <td class="flex px-6 py-4 whitespace-nowrap text-sm text-gray-900"><app-action icon="pencil"
-                                title="Editar" classIcon="text-lg text-blue-600"
-                                (clickAction)="openDetailsModal(ticket)" />
+                        <td class="flex px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <app-action icon="clipboard-user" title="Atribuir chamado" classIcon="text-lg " [ngClass]="{ 
+                                    'pointer-events-none text-gray-600': ticket.chaTxStatus !== 'ABERTO',
+                                        'text-blue-600': ticket.chaTxStatus === 'ABERTO'
+                                    }" (clickAction)="openDetailsModal(ticket)" />
                         </td>
                     </tr>
                     }@empty {
@@ -84,3 +86,28 @@
     </div>
 
 </section>
+
+@if(this.formModalIsOpen()){
+<app-modal enableClose [(open)]="formModalIsOpen">
+    <div class="bg-white border-2 border-black rounded-md p-3 w-[35rem]">
+        <div class="flex justify-between items-center">
+            <h1 class="text-2xl font-semibold">Atribuir profissional ao chamado</h1>
+            <button type="button" (click)="closeFormModal()"
+                class="flex button-default  text-black  gap-3 hover:bg-slate-50">
+                X
+            </button>
+        </div>
+        <div>
+
+            <app-dropdown-search placeholder="Selecione um técnico" [options]="this.usersPage()?.content!"
+                optionLabel="usuTxNome" optionIdentify="usuNrId" (selectedOptionChange)="onSelectTechinian($event)">
+                <ng-template [listTypeInject]="usersPage()?.content!" let-usu>
+                    <p>{{usu.usuTxNome}}</p>
+                </ng-template>
+            </app-dropdown-search>
+
+            <button class="button-default" (click)="submit()">Atribuir</button>
+
+        </div>
+    </div>
+</app-modal> }

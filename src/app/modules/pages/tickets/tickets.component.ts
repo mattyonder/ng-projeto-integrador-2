@@ -1,51 +1,62 @@
-import { KeyValuePipe } from '@angular/common';
+import { KeyValuePipe, NgClass } from '@angular/common';
 import {
   Component,
   DestroyRef,
   ElementRef,
   inject,
+  Injector,
   OnInit,
   signal,
   viewChild,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { exhaustMap, filter } from 'rxjs';
 import { StatusEnum } from '../../../../shared/enums/status-enum';
 import { IPage, PageRequest } from '../../../../shared/models/page';
 import { ICategoryDto } from '../../../../shared/models/pages/category/category-dto';
 import { ITicketDto } from '../../../../shared/models/pages/open-ticket/ticket-dto';
 import { ITicketForm } from '../../../../shared/models/pages/open-ticket/ticket-form';
+import { IUserDto } from '../../../../shared/models/user-dto';
 import { CategoryService } from '../../../../shared/services/category.service';
 import { TicketService } from '../../../../shared/services/ticket.service';
+import { UserService } from '../../../../shared/services/user.service';
 import { ActionComponent } from '../../../../shared/ui/action/action.component';
 import { FormInputDirective } from '../../../../shared/ui/directives/form-input.directive';
+import { ListTypeInjectDirective } from '../../../../shared/ui/directives/list-type-inject.directive';
+import { DropdownSearchComponent } from '../../../../shared/ui/dropdown-search/dropdown-search.component';
 import { SelectComponent } from '../../../../shared/ui/dropdown-select/dropdown-select.component';
 import { FormFieldComponent } from '../../../../shared/ui/form-field/form-field.component';
+import { ModalComponent } from '../../../../shared/ui/modal/modal.component';
 import { PaginationComponent } from '../../../../shared/ui/pagination/pagination.component';
 import { StatusBadgeComponent } from '../../../../shared/ui/status-badge/status-badge.component';
 import { BaseComponent } from '../../../../shared/utils/base.component';
+import { debounceTimeAfterFirst } from '../../../../shared/utils/custom.operators';
 
 @Component({
-    selector: 'app-tickets',
-    imports: [
-        PaginationComponent,
-        FontAwesomeModule,
-        ActionComponent,
-        FormFieldComponent,
-        FormInputDirective,
-        SelectComponent,
-        KeyValuePipe,
-        StatusBadgeComponent,
-    ],
-    templateUrl: './tickets.component.html',
-    styles: ''
+  selector: 'app-tickets',
+  imports: [
+    PaginationComponent,
+    FontAwesomeModule,
+    ActionComponent,
+    FormFieldComponent,
+    FormInputDirective,
+    SelectComponent,
+    KeyValuePipe,
+    StatusBadgeComponent,
+    NgClass,
+    ModalComponent,
+    DropdownSearchComponent,
+    ListTypeInjectDirective,
+  ],
+  templateUrl: './tickets.component.html',
+  styles: '',
 })
 export class TicketsComponent extends BaseComponent implements OnInit {
-  openDetailsModal(_t41: ITicketDto) {
-    throw new Error('Method not implemented.');
-  }
   readonly #ticketService = inject(TicketService);
+  readonly #userService = inject(UserService);
   readonly #categoryService = inject(CategoryService);
+  readonly #injector = inject(Injector);
   readonly #destroyRef = inject(DestroyRef);
 
   titleFilterRef = viewChild.required('titleFilterRef', {
@@ -69,7 +80,12 @@ export class TicketsComponent extends BaseComponent implements OnInit {
   ticketFilter = signal<ITicketForm | undefined>(undefined);
   categoriesPage = signal<IPage<ICategoryDto> | null>(null);
 
+  usersPage = signal<IPage<IUserDto> | null>(null);
+  selectedUser = signal<IUserDto | null>(null);
+
   formModalIsOpen = signal<boolean>(false);
+
+  searchedUser = signal<string>('');
 
   ngOnInit(): void {
     this.#listCategories();
@@ -84,6 +100,39 @@ export class TicketsComponent extends BaseComponent implements OnInit {
         next: (res) => this.ticketsPage.set(res),
         error: (error) =>
           this.messageService.error('Erro ao carregar os chamados'),
+      });
+  }
+
+  openDetailsModal(dto: ITicketDto) {
+    this.formModalIsOpen.set(true);
+    this.selectedTicket.set(dto);
+    this.#addSubscriptionForUser();
+  }
+
+  closeModal() {
+    this.formModalIsOpen.set(false);
+    this.selectedTicket.set(null);
+    this.selectedUser.set(null);
+    this.searchedUser.set('');
+  }
+
+  #addSubscriptionForUser() {
+    toObservable(this.searchedUser, { injector: this.#injector })
+      .pipe(
+        filter((usuTxNome) => usuTxNome?.length! > -1),
+        debounceTimeAfterFirst(500),
+        exhaustMap((usuTxNome) =>
+          this.#userService.getAll(
+            {
+              rolNrId: 2,
+              usuTxNome,
+            } as IUserDto,
+            { size: 10, page: 0 }
+          )
+        )
+      )
+      .subscribe({
+        next: (res) => this.usersPage.set(res),
       });
   }
 
@@ -134,6 +183,31 @@ export class TicketsComponent extends BaseComponent implements OnInit {
 
   closeFormModal() {
     this.formModalIsOpen.set(false);
+  }
+
+  onSelectTechinian($event: IUserDto | undefined) {
+    this.selectedUser.set($event!);
+  }
+
+  submit(): void {
+    if (!this.selectedUser()) {
+      this.messageService.error('Selecione um técnico primeiro');
+      return;
+    }
+
+    this.#ticketService
+      .assignToTechnician(
+        this.selectedTicket()?.chaNrId!,
+        this.selectedUser()?.usuNrId!
+      )
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe({
+        next: (res) => {
+          this.messageService.success(
+            'Chamado atribuido ao técnico com sucesso'
+          );
+        },
+      });
   }
 
   readonly StatusEnum = StatusEnum;

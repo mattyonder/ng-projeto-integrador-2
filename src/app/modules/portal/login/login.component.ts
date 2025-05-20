@@ -37,9 +37,8 @@ export class LoginComponent extends BaseComponent {
     const form = this.loginFg.getRawValue() as ILoginForm;
 
     this.#loginService.login(form).subscribe({
-      next: (res) => {
-        this.router.navigate(['paginas']);
-      },
+      next: (res) => this.router.navigate(['paginas']),
+      error: (error) => this.messageService.error(error.error.error),
     });
   }
 }
