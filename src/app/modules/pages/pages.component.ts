@@ -37,7 +37,7 @@ import { BaseComponent } from '../../../shared/utils/base.component';
           <a class="text-link" routerLink="categorias"
             >Categorias de Chamados</a
           >
-          <a class="text-link" routerLink="dashboards">Dashboards</a>
+          <!-- <a class="text-link" routerLink="dashboards">Dashboards</a> -->
           } }
 
           <a class="text-link">Configurações</a>
@@ -58,8 +58,13 @@ export class PagesComponent extends BaseComponent implements OnInit {
   role = signal<IRoleDto | null>(null);
   private login = inject(LoginService);
   ngOnInit() {
-    const role = this.login.getUserRole();
-    this.role.set(role);
+    const roles = this.login.getUserRole();
+    if (roles) {
+    this.role.set({
+      rolTxDescricao: roles
+    });
+  }
+    console.log(this.role()?.rolTxDescricao)
   }
 
   logout() {

@@ -7,14 +7,60 @@
         </div>
     </div>
 
-    <div class="flex gap-3 h-[85%]">
-        <div class="flex flex-col gap-3 w-[30%]">
-            <div class="bg-white rounded-lg h-[50%] p-3">
+    <div class="flex w-full justify-around gap-4">
+        @for (item of statusList ; track $index) {
+        @let data = getStatusData(item.status);
+
+        @switch (item.status) {
+        @case ('ABERTO') {
+        <div class="flex flex-col p-3 bg-blue-600 text-white rounded-xl font-medium gap-2 w-[16rem]">
+            <span>Em aberto</span>
+            <div class="flex items-center justify-between font-light">
+                <span>Total</span>
+                <span class="font-bold text-4xl">{{ data?.total == null ? '0' : data?.total}}</span>
+            </div>
+        </div>
+        }
+        @case ('EM_ANDAMENTO') {
+        <div class="flex flex-col p-3 bg-yellow-600 text-white rounded-xl font-medium gap-2 w-[16rem]">
+            <span>Em Andamento</span>
+            <div class="flex items-center justify-between font-light">
+                <span>Total</span>
+                <span class="font-bold text-4xl">{{ data?.total == null ? '0' : data?.total}}</span>
+            </div>
+        </div>
+        }
+        @case ('RESOLVIDO') {
+        <div class="flex flex-col p-3  bg-green-600 text-white rounded-xl font-medium gap-2 w-[16rem]">
+            <span>Resolvidos</span>
+            <div class="flex items-center justify-between font-light">
+                <span>Total</span>
+                <span class="font-bold text-4xl">{{ data?.total == null ? '0' : data?.total}}</span>
+            </div>
+        </div>
+        }
+        @case ('FECHADO') {
+        <div class="flex flex-col p-3  bg-red-500 text-white rounded-xl font-medium gap-2 w-[16rem]">
+            <span>Fechado</span>
+            <div class="flex items-center justify-between font-light">
+                <span>Total</span>
+                <span class="font-bold text-4xl">{{ data?.total == null ? '0' : data?.total}}</span>
+            </div>
+        </div>
+        }
+        }
+        }
+    </div>
+
+    <div class="flex flex-col mt-4 gap-3 h-[85%]">
+
+        <!-- <div class="flex flex-col gap-3 w-[30%]">
+            <div class="bg-white shadow-md rounded-lg h-[50%] p-3">
                 <div>
-                    <h2>Total de chamados por status</h2>
+                    <h2 class="font-semibold">Total de chamados por status</h2>
                 </div>
 
-                <div class="flex flex-col h-full justify-around">
+                <div class="flex mt-2 flex-col h-full gap-6">
                     @for (item of relatorioStatusDto(); track $index) {
                     @switch (item.status) {
                     @case ('ABERTO') {
@@ -66,12 +112,40 @@
                 </div>
             </div>
 
-            <div class="bg-white flex flex-col gap-2 rounded-lg h-[50%] p-3">
+            
+        </div> -->
+
+        <div class="flex gap-3 w-full">
+            <div class="bg-white shadow-md rounded-lg w-full flex-col p-3 flex">
                 <div>
-                    <h2>Tecnicos com mais chamados no dia</h2>
+                    <h2 class="font-semibol">Total de chamados por categoria</h2>
+                </div>
+                <!-- por categoria -->
+                <apx-chart class="w-[20%]" [series]="chartOptionsPizza!.series!" [chart]="chartOptionsPizza!.chart!"
+                    [labels]="chartOptionsPizza!.labels!" [responsive]="chartOptionsPizza!.responsive!"></apx-chart>
+            </div>
+
+            <div class="bg-white shadow-md flex flex-col rounded-lg w-full p-3">
+                <div>
+                    <h2 class="font-semibol">Total de chamados no dia</h2>
+                </div>
+                <div class="flex h-full justify-center items-center flex-col">
+                    <p class="font-bold text-6xl">{{ relatorioChamadosPorDataDto()?.total }}</p>
+                    <p class="font-semibold text-2xl">{{ relatorioChamadosPorDataDto()?.nomeDia }}</p>
+                </div>
+                <div class="flex items-start w-full">
+                    <span class="text-xs font-semibold">Data: {{ relatorioChamadosPorDataDto()?.data }}</span>
+                </div>
+            </div>
+
+            <div class="bg-white shadow-md flex flex-col gap-2 w-full rounded-lg p-3">
+                <div>
+                    <h2 class="font-semibold">Tecnicos com mais chamados no dia</h2>
                 </div>
 
-                @for (item of relatorioChamadosPorTecnicoDto(); track $index) {
+                <div class="overflow-auto flex gap-2 flex-col  max-h-[100%]">
+
+                    @for (item of relatorioChamadosPorTecnicoDto(); track $index) {
                     <div class="flex gap-2">
                         <span class="p-5 flex justify-center items-center h-6 w-6 rounded-full bg-slate-500">
                             <fa-icon class="text-white" icon="user"></fa-icon>
@@ -81,41 +155,25 @@
                             <p class="text-xs text-gray-600">Total de chamados: {{ item.totalChamados }}</p>
                         </div>
                     </div>
-                }
+                    }
+                </div>
             </div>
         </div>
 
-        <div class="flex flex-col gap-3 w-[30%]">
-            <div class="bg-white rounded-lg h-[50%] flex">
-                <!-- por categoria -->
-                <apx-chart class="w-[20%]" [series]="chartOptionsPizza!.series!" [chart]="chartOptionsPizza!.chart!"
-                    [labels]="chartOptionsPizza!.labels!" [responsive]="chartOptionsPizza!.responsive!"></apx-chart>
-            </div>
-
-            <div class="bg-white flex flex-col justify-around items-center rounded-lg h-[50%] p-3">
+        <div class="w-full h-full"> <!-- altura real -->
+            <div class="bg-white shadow-md h-[80%] rounded-lg p-4">
                 <div>
-                    <h2>Total de chamados no dia</h2>
+                    <h2 class="font-semibold">Total de chamados por semana</h2>
                 </div>
-                <div class="flex justify-center items-center flex-col">
-                    <p class="font-bold text-4xl">{{ relatorioChamadosPorDataDto()?.total }}</p>
-                    <p class="font-semibold text-2xl">{{ relatorioChamadosPorDataDto()?.nomeDia }}</p>
-                </div>
-                <div class="flex items-start w-full">
-                    <span class="text-xs">Data: {{ relatorioChamadosPorDataDto()?.data }}</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="w-[40%] h-full"> <!-- altura real -->
-            <div class="bg-white h-full rounded-lg p-4">
-                <div class="flex justify-center">
-                    <h2>Total de chamados por semana</h2>
-                </div>
-                <apx-chart style="height: 100%; display: block;" [series]="chartOptionsBar!.series!"
+                <!-- <apx-chart style="height: 100%; display: block;" [series]="chartOptionsBar!.series!"
                     [chart]="chartOptionsBar!.chart!" [dataLabels]="chartOptionsBar!.dataLabels!"
                     [plotOptions]="chartOptionsBar!.plotOptions!" [yaxis]="chartOptionsBar!.yaxis!"
                     [xaxis]="chartOptionsBar!.xaxis!" [fill]="chartOptionsBar!.fill!" [title]="chartOptionsBar!.title!">
-                </apx-chart>
+                </apx-chart> -->
+
+                <apx-chart  style="height: 100%; display: block;" [series]="chartOptionsBar!.series!" [chart]="chartOptionsBar!.chart!" [xaxis]="chartOptionsBar!.xaxis!"
+                    [dataLabels]="chartOptionsBar!.dataLabels!" [grid]="chartOptionsBar!.grid!" [stroke]="chartOptionsBar!.stroke!"
+                    [title]="chartOptionsBar!.title!"></apx-chart>
             </div>
         </div>
 

@@ -1,4 +1,4 @@
 export interface IRoleDto {
-  rolNrId: number;
+  rolNrId?: number;
   rolTxDescricao: string;
 }
