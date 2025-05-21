@@ -38,8 +38,8 @@ export type ChartOptionsLine = {
   title: ApexTitleSubtitle;
 };
 
+import { DatePipe } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { ApexFill, ApexPlotOptions, ApexYAxis } from 'ng-apexcharts';
 import {
   DashboardService,
   RelatorioChamadosPorCategoriaDto,
@@ -60,7 +60,7 @@ export type ChartOptionsBar = {
 @Component({
   selector: 'app-dashboards',
   standalone: true,
-  imports: [NgApexchartsModule, FontAwesomeModule],
+  imports: [NgApexchartsModule, FontAwesomeModule, DatePipe],
   templateUrl: './dashboards.component.html',
 })
 export class DashboardsComponent implements OnInit {
@@ -96,7 +96,7 @@ export class DashboardsComponent implements OnInit {
     { status: 'ABERTO' },
     { status: 'EM_ANDAMENTO' },
     { status: 'RESOLVIDO' },
-    { status: 'FECHADO' }
+    { status: 'FECHADO' },
   ];
 
   ngOnInit(): void {
@@ -111,9 +111,8 @@ export class DashboardsComponent implements OnInit {
     this.getChamadosSemanal();
   }
 
-
   getStatusData(status: string): RelatorioStatusDto | null {
-    return this.relatorioStatusDto()!.find(s => s.status === status) ?? null;
+    return this.relatorioStatusDto()!.find((s) => s.status === status) ?? null;
   }
 
   onDateChange(event: Event) {
@@ -195,27 +194,27 @@ export class DashboardsComponent implements OnInit {
         type: 'line',
         height: '100%',
         zoom: {
-          enabled: false
-        }
+          enabled: false,
+        },
       },
       stroke: {
         curve: 'straight',
       },
       dataLabels: {
-        enabled: true
+        enabled: true,
       },
       xaxis: {
         categories: label,
         position: 'bottom',
         labels: {
           offsetY: -5,
-        }
+        },
       },
       grid: {
         row: {
-          colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
-          opacity: 0.5
-        }
+          colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+          opacity: 0.5,
+        },
       },
     };
   }
@@ -248,7 +247,7 @@ export class DashboardsComponent implements OnInit {
         },
       },
       xaxis: {
-        categories: label
+        categories: label,
       },
     };
   }

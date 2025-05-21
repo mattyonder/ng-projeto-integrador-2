@@ -9,6 +9,7 @@ import { OpenTicketsComponent } from './open-tickets/open-tickets.component';
 import { PagesComponent } from './pages.component';
 import { TicketCategoriesComponent } from './ticket-categories/ticket-categories.component';
 import { TicketsComponent } from './tickets/tickets.component';
+import { UsersComponent } from './users/users.component';
 
 export const PAGES_ROUTES: Routes = [
   {
@@ -61,6 +62,12 @@ export const PAGES_ROUTES: Routes = [
         data: { roles: ['ADMIN'] },
         canActivate: [AuthGuard],
         component: TicketCategoriesComponent,
+      },
+      {
+        path: 'usuarios',
+        data: { roles: ['ADMIN'] },
+        canActivate: [AuthGuard],
+        component: UsersComponent,
       },
       {
         path: '**',

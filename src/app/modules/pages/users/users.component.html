@@ -1,0 +1,100 @@
+<section class="flex flex-col px-5 py-7 gap-3 overflow-y-auto">
+  <div class="flex p-1 justify-between items-center">
+    <h1 class="font-bold text-3xl">Usuários</h1>
+  </div>
+  <h2 class="font-semibold text-xl">Filtros</h2>
+
+  <div class="flex justify-between items-center">
+    <div class="flex gap-3">
+      <app-form-field label="Nome">
+        <input #nameFilterRef appFormInput placeholder="Pesquise por nome " (change)="this.filterByName($event)" />
+      </app-form-field>
+      <app-dropdown-select [isNotRequired]="false" #roleFilterRef [label]="'Tipo'" [options]="RolesEnum | keyvalue"
+        labelKey="value" valueKey="key" placeholder="Selecione um tipo de usuário"
+        (selectedObject)="this.filterByRole($event)">
+      </app-dropdown-select>
+
+
+    </div>
+
+
+    <div class="flex gap-3">
+      <button type="button" class="button-default bg-white text-black hover:bg-slate-50" (click)="this.clearFilter()">
+        Limpar</button>
+      <button type="button" class="button-default bg-primary-3 text-white flex gap-2 hover:bg-primary-2 "
+        (click)="this.applyFilter()">
+        Filtrar
+        <fa-icon icon="filter" />
+      </button>
+    </div>
+  </div>
+  <div class="bg-white border-accent rounded-lg shadow-md px-4 py-3 mt-4">
+    <div class="flex justify-between">
+      <span class="font-semibold">Usuários:</span>
+      <app-pagination #paginationRef [totalPages]="this.usersPage()?.totalPages" (pageChange)="changePage($event)" />
+    </div>
+
+
+    <div class="overflow-x-auto mt-2">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-accent">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
+              Nome
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
+              Tipo</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
+              Email</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
+              Ações</th>
+
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          @for (users of usersPage()?.content; track $index) {
+          <tr class="hover:bg-gray-50">
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{users.usuTxNome}}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              @if(users.rolNrId === 1){
+              Admin
+              }@else if (users.rolNrId === 2){
+              Técnico
+              }
+              @else {
+              Cliente
+              }
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              {{users.usuTxEmail}}
+            </td>
+            <td class="flex px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              @if(users.rolNrId === 1){
+              <app-action icon="clipboard-user" title="Não é possivel alterar o tipo de um usuário admin"
+                classIcon="text-lg text-black" />
+              }@else if (users.rolNrId === 2){
+              <app-action icon="user" title="Atribuir tipo cliente" classIcon="text-lg text-blue-600"
+                (clickAction)="showConfirmationClientModal(users)" />
+              }
+              @else {
+              <app-action icon="user-tie" title="Atribuir tipo técnico" classIcon="text-lg text-blue-600"
+                (clickAction)="showConfirmationThecnicalModal(users)" />
+              }
+
+            </td>
+          </tr>
+          }@empty {
+          <tr>
+            <td colspan="4" class="text-center pt-6 pb-3  text-gray-500">
+              Nenhum usuário foi encontrado
+            </td>
+          </tr> }
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</section>
+
+<app-confirmation-modal></app-confirmation-modal>

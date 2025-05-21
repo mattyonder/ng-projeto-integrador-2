@@ -1,48 +1,58 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { DashboardService, RelatorioStatusDto } from '../../../../shared/services/dashboard/dashboard.service';
-import { DashboardsComponent } from "../dashboards/dashboards.component";
+import {
+  DashboardService,
+  RelatorioStatusDto,
+} from '../../../../shared/services/dashboard/dashboard.service';
+import { LoginService } from '../../../../shared/services/login/login.service';
+import { BaseComponent } from '../../../../shared/utils/base.component';
+import { DashboardsComponent } from '../dashboards/dashboards.component';
 
 @Component({
-    selector: 'app-home-page',
-    standalone: true,
-    templateUrl: './home-page.component.html',
-    imports: [DashboardsComponent]
+  selector: 'app-home-page',
+  standalone: true,
+  templateUrl: './home-page.component.html',
+  imports: [DashboardsComponent],
 })
-export class HomePageComponent implements OnInit {
+export class HomePageComponent extends BaseComponent implements OnInit {
+  // SERVICES
+  private auth = inject(LoginService);
 
-    // SERVICES
-    #dashboardService = inject(DashboardService);
+  #dashboardService = inject(DashboardService);
 
-    //DTOS
-    relatorioStatusDto = signal<RelatorioStatusDto[] | null>(null);
-    statusList = [
-        { status: 'ABERTO' },
-        { status: 'EM_ANDAMENTO' },
-        { status: 'RESOLVIDO' },
-        { status: 'FECHADO' }
-    ];
+  //DTOS
+  relatorioStatusDto = signal<RelatorioStatusDto[] | null>(null);
+  statusList = [
+    { status: 'ABERTO' },
+    { status: 'EM_ANDAMENTO' },
+    { status: 'RESOLVIDO' },
+    { status: 'FECHADO' },
+  ];
 
-    ngOnInit(): void {
-        const hoje = new Date();
-        const dataFormatada = hoje.toISOString().split('T')[0];
+  ngOnInit(): void {
+    const userRole = this.auth.getUserRole();
+    if (userRole?.rolTxDescricao === 'CLIENTE')
+      this.router.navigate(['paginas/meus-chamados-cliente']);
+    const hoje = new Date();
+    const dataFormatada = hoje.toISOString().split('T')[0];
 
-        this.getPorStatus(dataFormatada);
-    }
+    this.getPorStatus(dataFormatada);
+  }
 
-    getPorStatus(dataSelecionada?: string) {
-        this.#dashboardService.getPorStatus(dataSelecionada).subscribe({
-            next: (res) => {
-                this.relatorioStatusDto.set(res);
-            },
-        });
-    }
+  getPorStatus(dataSelecionada?: string) {
+    this.#dashboardService.getPorStatus(dataSelecionada).subscribe({
+      next: (res) => {
+        this.relatorioStatusDto.set(res);
+      },
+    });
+  }
 
-    getStatusData(status: string): RelatorioStatusDto | null {
-        return this.relatorioStatusDto()!.find(s => s.status === status) ?? null;
-    }
+  getStatusData(status: string): RelatorioStatusDto | null {
+    return this.relatorioStatusDto()!.find((s) => s.status === status) ?? null;
+  }
 
-
-    getItem(status: string) {
-        return this.relatorioStatusDto()!.find(item => item.status === status) || null;
-    }
+  getItem(status: string) {
+    return (
+      this.relatorioStatusDto()!.find((item) => item.status === status) || null
+    );
+  }
 }

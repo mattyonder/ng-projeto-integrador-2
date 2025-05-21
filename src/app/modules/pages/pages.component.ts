@@ -18,7 +18,6 @@ import { BaseComponent } from '../../../shared/utils/base.component';
 
         <nav class="flex flex-col px-5 gap-4">
           <!-- todo mundo vê Home -->
-          <a class="text-link" routerLink="home">Home</a>
 
           @switch (this.role()?.rolTxDescricao!) { @case ('CLIENTE'){
           <a class="text-link" routerLink="abrir-chamado">Abrir Chamado</a>
@@ -26,6 +25,8 @@ import { BaseComponent } from '../../../shared/utils/base.component';
             >Meus Chamados</a
           >
           } @case ('TECNICO') {
+          <a class="text-link" routerLink="home">Home</a>
+
           <a class="text-link" routerLink="meus-chamados-tecnico"
             >Meus Chamados</a
           >
@@ -33,14 +34,18 @@ import { BaseComponent } from '../../../shared/utils/base.component';
             >Chamados em Aberto</a
           >
           } @case ('ADMIN') {
+          <a class="text-link" routerLink="home">Home</a>
+
           <a class="text-link" routerLink="chamados">Chamados</a>
           <a class="text-link" routerLink="categorias"
             >Categorias de Chamados</a
           >
+          <a class="text-link" routerLink="usuarios">Usuarios</a>
+
           <!-- <a class="text-link" routerLink="dashboards">Dashboards</a> -->
           } }
 
-          <a class="text-link">Configurações</a>
+          <!-- <a class="text-link">Configurações</a> -->
           <a class="text-link cursor-pointer" (click)="this.logout()">Sair</a>
         </nav>
       </aside>
@@ -60,11 +65,11 @@ export class PagesComponent extends BaseComponent implements OnInit {
   ngOnInit() {
     const roles = this.login.getUserRole();
     if (roles) {
-    this.role.set({
-      rolTxDescricao: roles
-    });
-  }
-    console.log(this.role()?.rolTxDescricao)
+      this.role.set({
+        rolTxDescricao: roles.rolTxDescricao,
+      });
+    }
+    console.log(this.role()?.rolTxDescricao);
   }
 
   logout() {

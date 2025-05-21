@@ -17,7 +17,7 @@
 
             <app-dropdown-select [isNotRequired]="false" #statusFilterRef [label]="'Status'"
                 [options]="StatusTechnicianEnum | keyvalue" labelKey="value" valueKey="key"
-                placeholder="Selecione uma categoria" (selectedObject)="this.filterByStatus($event)">
+                placeholder="Selecione um status" (selectedObject)="this.filterByStatus($event)">
             </app-dropdown-select>
         </div>
 

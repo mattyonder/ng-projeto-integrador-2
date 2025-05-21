@@ -1,5 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { CustomValidators } from '../../../../shared/core/custom-validators/custom-validators';
 import { FormGroupOf } from '../../../../shared/core/types/form-groups-of';
 import { ILoginForm } from '../../../../shared/models/portal/login';
 import { LoginService } from '../../../../shared/services/login/login.service';
@@ -9,7 +11,12 @@ import { BaseComponent } from '../../../../shared/utils/base.component';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, FormFieldComponent, FormInputDirective],
+  imports: [
+    ReactiveFormsModule,
+    FormFieldComponent,
+    FormInputDirective,
+    RouterModule,
+  ],
   templateUrl: './register.component.html',
   styles: '',
 })
@@ -20,6 +27,14 @@ export class RegisterComponent extends BaseComponent {
   registerFg = this.fb.group<FormGroupOf<ILoginForm>>({
     usuTxEmail: this.fb.control(null, [Validators.required, Validators.email]),
     usuTxSenha: this.fb.control(null, Validators.required),
+    usuTxConfirmarSenha: this.fb.control(null, [
+      Validators.required,
+      CustomValidators.passwordMatch('usuTxSenha'),
+    ]),
+
+    usuTxNome: this.fb.control(null, Validators.required),
+    empNrId: this.fb.control(1, Validators.required), // Id padrao definifido da empresa com base na necessidade do usuário
+    rolNrId: this.fb.control(3, Validators.required), // id de Role padrao de CLIENTE
   });
 
   onSubmit() {

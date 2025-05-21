@@ -24,24 +24,26 @@ import { IPage } from '../../../../shared/models/page';
 import { ITicketDto } from '../../../../shared/models/pages/open-ticket/ticket-dto';
 import { ITicketForm } from '../../../../shared/models/pages/open-ticket/ticket-form';
 import { CategoryService } from '../../../../shared/services/category.service';
+import { LoginService } from '../../../../shared/services/login/login.service';
 import { TicketService } from '../../../../shared/services/ticket.service';
 
 @Component({
-    selector: 'app-open-ticket',
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        FormFieldComponent,
-        FormInputDirective,
-        SelectComponent,
-    ],
-    templateUrl: './open-ticket.component.html',
-    styles: ''
+  selector: 'app-open-ticket',
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormFieldComponent,
+    FormInputDirective,
+    SelectComponent,
+  ],
+  templateUrl: './open-ticket.component.html',
+  styles: '',
 })
 export class OpenTicketComponent extends BaseComponent implements OnInit {
   readonly #ticketService = inject(TicketService);
   readonly #categoryService = inject(CategoryService);
   readonly #destroyRef = inject(DestroyRef);
+  #loginService = inject(LoginService);
 
   selectedTicket = input<ITicketDto | null>(null);
 
@@ -57,14 +59,21 @@ export class OpenTicketComponent extends BaseComponent implements OnInit {
     chaTxTitulo: this.fb.control(null, Validators.required),
     chaTxDescricao: this.fb.control(null, Validators.required),
     chaTxStatus: this.fb.control('ABERTO', Validators.required),
-    chaNrIdCliente: this.fb.control(3, Validators.required),
+    chaNrIdCliente: this.fb.control(null, Validators.required),
     chaNrIdTecnico: this.fb.control(null),
     catNrId: this.fb.control(null, Validators.required),
   });
 
+  userNrId = signal<number | null>(null);
+  empNrId = signal<number | null>(null);
+
   StatusEnum = StatusEnum;
 
   ngOnInit(): void {
+    this.userNrId.set(this.#loginService.getUserId());
+    this.empNrId.set(this.#loginService.getUserEmpId());
+    this.ticketFg.controls.chaNrIdCliente?.setValue(this.userNrId()!);
+
     this.#listCategories();
     if (this.selectedTicket()) this.#setupFormOnEdit();
   }
@@ -77,7 +86,7 @@ export class OpenTicketComponent extends BaseComponent implements OnInit {
   #listCategories() {
     this.#categoryService
       // .getAll(pageRequest)\
-      .getAllForCompany(1, undefined, { page: 0, size: 2000 })
+      .getAllForCompany(this.empNrId()!, undefined, { page: 0, size: 2000 })
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
         next: (res) => this.categoriesPage.set(res),

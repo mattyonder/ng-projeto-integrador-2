@@ -10,7 +10,12 @@
         </div>
 
         <form [formGroup]="registerFg" (ngSubmit)="onSubmit()" class="space-y-6">
-            <div class="space-y-6">
+            <div class="flex flex-col  space-y-3">
+                <app-form-field label="Nome do usuário"
+                    [error]="this.errorHandler.showErrorMessageInField(this.registerFg, 'usuTxNome')">
+                    <input appFormInput type="text" placeholder="Digite seu nome" formControlName="usuTxNome"
+                        class="w-full p-5 rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-4 focus:ring-primary-2 focus:border-primary-3 transition-all duration-300 ease-in-out placeholder:text-gray-500">
+                </app-form-field>
                 <app-form-field label="Email"
                     [error]="this.errorHandler.showErrorMessageInField(this.registerFg, 'usuTxEmail')">
                     <input appFormInput type="email" placeholder="Digite seu email" formControlName="usuTxEmail"
@@ -20,6 +25,13 @@
                 <app-form-field label="Senha"
                     [error]="this.errorHandler.showErrorMessageInField(this.registerFg, 'usuTxSenha')">
                     <input appFormInput type="password" placeholder="Digite sua senha" formControlName="usuTxSenha"
+                        class="w-full p-5 rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-4 focus:ring-primary-2 focus:border-primary-3 transition-all duration-300 ease-in-out placeholder:text-gray-500">
+                </app-form-field>
+
+                <app-form-field label="Confirme sua senha"
+                    [error]="this.errorHandler.showErrorMessageInField(this.registerFg, 'usuTxConfirmarSenha')">
+                    <input appFormInput type="password" placeholder="Digite sua senha"
+                        formControlName="usuTxConfirmarSenha"
                         class="w-full p-5 rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-4 focus:ring-primary-2 focus:border-primary-3 transition-all duration-300 ease-in-out placeholder:text-gray-500">
                 </app-form-field>
             </div>
@@ -32,7 +44,7 @@
             </div>
 
             <div class="flex justify-center mt-4">
-                <a routerLink="login" class="text-sm text-primary-3 hover:underline"> Já tem uma conta ?
+                <a [routerLink]="['/portal/login']" class="text-sm text-primary-3 hover:underline"> Já tem uma conta ?
                 </a>
             </div>
 

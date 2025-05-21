@@ -15,6 +15,7 @@ import { ICategoryDto } from '../../../../shared/models/pages/category/category-
 import { ITicketDto } from '../../../../shared/models/pages/open-ticket/ticket-dto';
 import { ITicketForm } from '../../../../shared/models/pages/open-ticket/ticket-form';
 import { CategoryService } from '../../../../shared/services/category.service';
+import { LoginService } from '../../../../shared/services/login/login.service';
 import { TicketService } from '../../../../shared/services/ticket.service';
 import { ActionComponent } from '../../../../shared/ui/action/action.component';
 import { FormInputDirective } from '../../../../shared/ui/directives/form-input.directive';
@@ -45,6 +46,7 @@ export class MyTicketsTechniciansComponent extends BaseComponent {
   readonly #ticketService = inject(TicketService);
   readonly #categoryService = inject(CategoryService);
   readonly #destroyRef = inject(DestroyRef);
+  #loginService = inject(LoginService);
 
   titleFilterRef = viewChild.required('titleFilterRef', {
     read: ElementRef,
@@ -67,16 +69,22 @@ export class MyTicketsTechniciansComponent extends BaseComponent {
   ticketFilter = signal<ITicketForm | undefined>(undefined);
   categoriesPage = signal<IPage<ICategoryDto> | null>(null);
 
+  userNrId = signal<number | null>(null);
+  empNrId = signal<number | null>(null);
+
   formModalIsOpen = signal<boolean>(false);
 
   ngOnInit(): void {
+    this.userNrId.set(this.#loginService.getUserId());
+    this.empNrId.set(this.#loginService.getUserEmpId());
+
     this.#listCategories();
     this.#listTickets({ size: 10, page: 0 });
   }
 
   #listTickets(pageRequest: PageRequest) {
     this.#ticketService
-      .getByTechnicianId(4, pageRequest, this.ticketFilter())
+      .getByTechnicianId(this.userNrId()!, pageRequest, this.ticketFilter())
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
         next: (res) => this.ticketsPage.set(res),
@@ -88,7 +96,7 @@ export class MyTicketsTechniciansComponent extends BaseComponent {
   #listCategories() {
     this.#categoryService
       // .getAll(pageRequest)\
-      .getAllForCompany(1, undefined, { page: 0, size: 2000 })
+      .getAllForCompany(this.empNrId()!, undefined, { page: 0, size: 2000 })
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
         next: (res) => this.categoriesPage.set(res),

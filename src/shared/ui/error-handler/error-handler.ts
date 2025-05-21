@@ -12,7 +12,7 @@ export class AppErrorHandler {
     ['min', 'O valor excedeu o mínimo permitido.'],
     ['max', 'O valor excedeu o máximo permitido.'],
     ['email', 'Digite um endereço de e-mail válido.'],
-    ['passwordMatch', 'A senha não coincide.'],
+    ['passwordMatch', 'A senhas não coincide.'],
   ]);
 
   showErrorMessageInField(form: NgForm | FormGroup, key: string): string {

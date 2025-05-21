@@ -16,6 +16,7 @@ export class LoginService {
 
   private _role: IRoleDto | null = null;
   private _empNrId: number | null = null;
+  private _usuNrId: number | null = null;
 
   login(data: ILoginForm): Observable<AuthResponseDto> {
     return this.http.post<AuthResponseDto>(`${this.baseUrl}/login`, data).pipe(
@@ -41,7 +42,7 @@ export class LoginService {
     const payload = JSON.parse(atob(token.split('.')[1]));
     this._role = payload.role ?? null;
     this._empNrId = payload.empNrId ?? null;
-
+    this._usuNrId = payload._usuNrId ?? null;
     // redireciona após login
     this.router.navigate(['/portal']);
   }
@@ -61,8 +62,7 @@ export class LoginService {
     return localStorage.getItem('token');
   }
 
-  getUserRole(): string | null {
-    // if (this._role) return this._role as IRoleDto;
+  getUserRole(): IRoleDto | null {
     // pega do token se não tiver em memória
     const token = this.getToken();
     if (!token) return null;
@@ -80,10 +80,16 @@ export class LoginService {
   }
 
   getUserEmpId(): number | null {
-    if (this._empNrId !== null) return this._empNrId;
     const token = this.getToken();
     if (!token) return null;
     const payload = JSON.parse(atob(token.split('.')[1]));
     return payload.empNrId ?? null;
+  }
+
+  getUserId(): number | null {
+    const token = this.getToken();
+    if (!token) return null;
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.usuNrId ?? null;
   }
 }

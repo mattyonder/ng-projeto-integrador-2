@@ -4,21 +4,23 @@ import { FormGroupOf } from '../../../../../shared/core/types/form-groups-of';
 import { ICategoryDto } from '../../../../../shared/models/pages/category/category-dto';
 import { ICategoryForm } from '../../../../../shared/models/pages/category/category-form';
 import { CategoryService } from '../../../../../shared/services/category.service';
+import { LoginService } from '../../../../../shared/services/login/login.service';
 import { FormInputDirective } from '../../../../../shared/ui/directives/form-input.directive';
 import { FormFieldComponent } from '../../../../../shared/ui/form-field/form-field.component';
 import { BaseComponent } from '../../../../../shared/utils/base.component';
 
 @Component({
-    selector: 'app-ticket-categories-form',
-    imports: [FormFieldComponent, FormInputDirective, ReactiveFormsModule],
-    templateUrl: './ticket-categories-form.component.html',
-    styles: ''
+  selector: 'app-ticket-categories-form',
+  imports: [FormFieldComponent, FormInputDirective, ReactiveFormsModule],
+  templateUrl: './ticket-categories-form.component.html',
+  styles: '',
 })
 export class TicketCategoriesFormComponent
   extends BaseComponent
   implements OnInit
 {
   readonly #categoryService = inject(CategoryService);
+  #loginService = inject(LoginService);
 
   selectedCategory = input<ICategoryDto | null>(null);
 
@@ -26,11 +28,14 @@ export class TicketCategoriesFormComponent
 
   categoryFg = this.fb.group<FormGroupOf<ICategoryForm>>({
     catTxNome: this.fb.control(null, Validators.required),
-    empNrId: this.fb.control(1, Validators.required),
+    empNrId: this.fb.control(null, Validators.required),
   });
 
   ngOnInit(): void {
     if (this.selectedCategory()) this.#setupFormOnEdit();
+    this.categoryFg.controls.empNrId.setValue(
+      this.#loginService.getUserEmpId()
+    );
   }
 
   #setupFormOnEdit() {
