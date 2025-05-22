@@ -28,6 +28,12 @@ export class LoginComponent extends BaseComponent {
     usuTxSenha: this.fb.control(null, Validators.required),
   });
 
+  showPassword = false;
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
+
   onSubmit() {
     if (this.loginFg.invalid) {
       this.loginFg.markAllAsTouched();

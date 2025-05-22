@@ -118,8 +118,15 @@
         <div class="flex gap-3 w-full">
             <div class="bg-white shadow-md rounded-lg w-full flex-col p-3 flex">
                 <div>
-                    <h2 class="font-semibol">Total de chamados por categoria</h2>
+                    <h2 class="font-semibold">Total de chamados por categoria</h2>
                 </div>
+            
+                @if (!chartOptionsPizza?.series) {
+                    <div> 
+                        <p>Sem dados</p>   
+                    </div>
+                }
+                    
                 <!-- por categoria -->
                 <apx-chart class="w-[20%]" [series]="chartOptionsPizza!.series!" [chart]="chartOptionsPizza!.chart!"
                     [labels]="chartOptionsPizza!.labels!" [responsive]="chartOptionsPizza!.responsive!"></apx-chart>
@@ -127,7 +134,7 @@
 
             <div class="bg-white shadow-md flex flex-col rounded-lg w-full p-3">
                 <div>
-                    <h2 class="font-semibol">Total de chamados no dia</h2>
+                    <h2 class="font-semibold">Total de chamados no dia</h2>
                 </div>
                 <div class="flex h-full justify-center items-center flex-col">
                     <p class="font-bold text-6xl">{{ relatorioChamadosPorDataDto()?.total }}</p>

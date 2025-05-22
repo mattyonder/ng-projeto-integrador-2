@@ -19,8 +19,16 @@
 
                 <app-form-field label="Senha"
                     [error]="this.errorHandler.showErrorMessageInField(this.loginFg, 'usuTxSenha')">
-                    <input appFormInput type="password" placeholder="Digite sua senha" formControlName="usuTxSenha"
-                        class="w-full p-5 rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-4 focus:ring-primary-2 focus:border-primary-3 transition-all duration-300 ease-in-out placeholder:text-gray-500">
+                    <div class="relative w-full">
+                        <input appFormInput [type]="showPassword ? 'text' : 'password'" placeholder="Digite sua senha"
+                            formControlName="usuTxSenha"
+                            class="w-full p-5 pr-12 rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-4 focus:ring-primary-2 focus:border-primary-3 transition-all duration-300 ease-in-out placeholder:text-gray-500" />
+                        <button type="button" (click)="togglePassword()"
+                            class="absolute top-1/2 right-4 transform -translate-y-1/2 text-gray-500 hover:text-primary-3"
+                            tabindex="-1">
+                            <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                        </button>
+                    </div>
                 </app-form-field>
             </div>
 

@@ -120,8 +120,6 @@ export class DashboardsComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     const dataSelecionada = input.value; // formato: 'YYYY-MM-DD'
 
-    console.log(dataSelecionada);
-
     if (dataSelecionada) {
       this.getPorTecnico(dataSelecionada);
       this.getPorStatus(dataSelecionada);
