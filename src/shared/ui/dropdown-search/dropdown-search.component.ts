@@ -75,7 +75,6 @@ import { ErrorComponent } from '../error/error.component';
               'bottom-full mb-1': openUp(),
               'top-full mt-1': !openUp(),
             }"
-        [@swingInTopFwd]="openUp() ? 'up' : 'down'"
       >
         <div
           class="overflow-y-auto max-h-72 mt-1 border-4 border-pec-gray3 bg-pec-gray shadow-md shadow-neutral-400"
@@ -84,7 +83,7 @@ import { ErrorComponent } from '../error/error.component';
           <button
             type="button"
             (click)="selectOption(option)"
-            class="block w-full text-start p-1 border-b-2 border-pec-gray3 bg-transparent hover:bg-gray-300"
+            class="block w-full text-start p-1 border-b-2 border-pec-gray3 bg-gray-200 hover:bg-gray-300"
           >
             <ng-container
               *ngTemplateOutlet="template; context: { $implicit: option }"

@@ -19,6 +19,7 @@ import { ITicketDto } from '../../../../shared/models/pages/open-ticket/ticket-d
 import { ITicketForm } from '../../../../shared/models/pages/open-ticket/ticket-form';
 import { IUserDto } from '../../../../shared/models/user-dto';
 import { CategoryService } from '../../../../shared/services/category.service';
+import { LoginService } from '../../../../shared/services/login/login.service';
 import { TicketService } from '../../../../shared/services/ticket.service';
 import { UserService } from '../../../../shared/services/user.service';
 import { ActionComponent } from '../../../../shared/ui/action/action.component';
@@ -55,6 +56,7 @@ import { debounceTimeAfterFirst } from '../../../../shared/utils/custom.operator
 export class TicketsComponent extends BaseComponent implements OnInit {
   readonly #ticketService = inject(TicketService);
   readonly #userService = inject(UserService);
+  #loginService = inject(LoginService);
   readonly #categoryService = inject(CategoryService);
   readonly #injector = inject(Injector);
   readonly #destroyRef = inject(DestroyRef);
@@ -84,10 +86,14 @@ export class TicketsComponent extends BaseComponent implements OnInit {
   selectedUser = signal<IUserDto | null>(null);
 
   formModalIsOpen = signal<boolean>(false);
-
+  empNrId = signal<number | null>(null);
+  rolNrId = signal<number | null>(null);
   searchedUser = signal<string>('');
 
   ngOnInit(): void {
+    this.empNrId.set(this.#loginService.getUserEmpId());
+    this.rolNrId.set(this.#loginService.getUserRole()?.rolNrId!);
+
     this.#listCategories();
     this.#listTickets({ size: 10, page: 0 });
   }
@@ -124,7 +130,7 @@ export class TicketsComponent extends BaseComponent implements OnInit {
         exhaustMap((usuTxNome) =>
           this.#userService.getAll(
             {
-              rolNrId: 2,
+              rolNrId: 2, //ROLE PADRAO DO TECNICO
               usuTxNome,
             } as IUserDto,
             { size: 10, page: 0 }
@@ -139,7 +145,7 @@ export class TicketsComponent extends BaseComponent implements OnInit {
   #listCategories() {
     this.#categoryService
       // .getAll(pageRequest)\
-      .getAllForCompany(1, undefined, { page: 0, size: 2000 })
+      .getAllForCompany(this.empNrId()!, undefined, { page: 0, size: 2000 })
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
         next: (res) => this.categoriesPage.set(res),
@@ -173,6 +179,7 @@ export class TicketsComponent extends BaseComponent implements OnInit {
     this.statusFilterRef().reset();
     (this.titleFilterRef().nativeElement as HTMLInputElement).value = '';
     this.ticketFilter.set(undefined);
+    this.ticketFilter.update((prev) => ({ ...prev, empNrId: this.empNrId() }));
 
     this.paginationRef().reset();
   }
@@ -206,6 +213,8 @@ export class TicketsComponent extends BaseComponent implements OnInit {
           this.messageService.success(
             'Chamado atribuido ao técnico com sucesso'
           );
+          this.#listTickets({ size: 10, page: 0 });
+          this.closeModal();
         },
       });
   }

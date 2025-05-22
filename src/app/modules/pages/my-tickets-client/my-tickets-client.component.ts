@@ -14,6 +14,7 @@ import { ICategoryDto } from '../../../../shared/models/pages/category/category-
 import { ITicketDto } from '../../../../shared/models/pages/open-ticket/ticket-dto';
 import { ITicketForm } from '../../../../shared/models/pages/open-ticket/ticket-form';
 import { CategoryService } from '../../../../shared/services/category.service';
+import { LoginService } from '../../../../shared/services/login/login.service';
 import { TicketService } from '../../../../shared/services/ticket.service';
 import { ActionComponent } from '../../../../shared/ui/action/action.component';
 import {
@@ -32,29 +33,30 @@ import { IPage, PageRequest } from './../../../../shared/models/page';
 import { BaseComponent } from './../../../../shared/utils/base.component';
 
 @Component({
-    selector: 'app-my-tickets-client',
-    imports: [
-        PaginationComponent,
-        FontAwesomeModule,
-        ActionComponent,
-        StatusBadgeComponent,
-        ModalComponent,
-        OpenTicketComponent,
-        ConfirmationModalComponent,
-        FormFieldComponent,
-        SelectComponent,
-        KeyValuePipe,
-        FormInputDirective,
-        NgClass,
-    ],
-    templateUrl: './my-tickets-client.component.html',
-    styles: ''
+  selector: 'app-my-tickets-client',
+  imports: [
+    PaginationComponent,
+    FontAwesomeModule,
+    ActionComponent,
+    StatusBadgeComponent,
+    ModalComponent,
+    OpenTicketComponent,
+    ConfirmationModalComponent,
+    FormFieldComponent,
+    SelectComponent,
+    KeyValuePipe,
+    FormInputDirective,
+    NgClass,
+  ],
+  templateUrl: './my-tickets-client.component.html',
+  styles: '',
 })
 export class MyTicketsClientComponent extends BaseComponent implements OnInit {
   readonly #ticketService = inject(TicketService);
   readonly #categoryService = inject(CategoryService);
   confirmationModal = inject(ConfirmationModalService);
   readonly #destroyRef = inject(DestroyRef);
+  #loginService = inject(LoginService);
 
   titleFilterRef = viewChild.required('titleFilterRef', {
     read: ElementRef,
@@ -77,16 +79,22 @@ export class MyTicketsClientComponent extends BaseComponent implements OnInit {
   ticketFilter = signal<ITicketForm | undefined>(undefined);
   categoriesPage = signal<IPage<ICategoryDto> | null>(null);
 
+  userNrId = signal<number | null>(null);
+  empNrId = signal<number | null>(null);
+
   formModalIsOpen = signal<boolean>(false);
 
   ngOnInit(): void {
+    this.userNrId.set(this.#loginService.getUserId());
+    this.empNrId.set(this.#loginService.getUserEmpId());
+
     this.#listCategories();
     this.#listTickets({ size: 10, page: 0 });
   }
 
   #listTickets(pageRequest: PageRequest) {
     this.#ticketService
-      .getByClientId(3, pageRequest, this.ticketFilter())
+      .getByClientId(this.userNrId()!, pageRequest, this.ticketFilter())
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
         next: (res) => this.ticketsPage.set(res),
@@ -98,7 +106,7 @@ export class MyTicketsClientComponent extends BaseComponent implements OnInit {
   #listCategories() {
     this.#categoryService
       // .getAll(pageRequest)\
-      .getAllForCompany(1, undefined, { page: 0, size: 2000 })
+      .getAllForCompany(this.empNrId()!, undefined, { page: 0, size: 2000 })
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
         next: (res) => this.categoriesPage.set(res),

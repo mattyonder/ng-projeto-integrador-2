@@ -10,7 +10,7 @@
         </div>
 
         <form [formGroup]="loginFg" (ngSubmit)="onSubmit()" class="space-y-6">
-            <div class="space-y-6">
+            <div class="flex flex-col space-y-3">
                 <app-form-field label="Email"
                     [error]="this.errorHandler.showErrorMessageInField(this.loginFg, 'usuTxEmail')">
                     <input appFormInput type="email" placeholder="Digite seu email" formControlName="usuTxEmail"
